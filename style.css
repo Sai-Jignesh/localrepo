@@ -5,3 +5,10 @@ p{
 body {
     font-family: Arial, sans-serif;
 }
+h1 {
+    color: darkblue;
+}
+
+p {
+    line-height: 1.6;
+}
