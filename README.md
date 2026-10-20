@@ -11,3 +11,10 @@
 - Staging changes
 - Creating commits
 - Using Git from VS Code
+
+## Next Goals
+
+- Learn Git branches
+- Practise GitHub push and pull
+- Understand merge conflicts
+- Build projects consistently
