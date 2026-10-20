@@ -18,3 +18,12 @@
 - Practise GitHub push and pull
 - Understand merge conflicts
 - Build projects consistently
+
+## Git Commands I Know
+
+- git status
+- git add
+- git commit
+- git log
+- git push
+- git pull
