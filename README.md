@@ -27,3 +27,11 @@
 - git log
 - git push
 - git pull
+
+
+
+## Today's Progress
+
+- Improved the HTML page
+- Practised CSS styling
+- Continued learning Git commits and GitHub
