@@ -48,3 +48,11 @@
 - Improved the HTML page
 - Practised CSS styling
 - Continued learning Git commits and GitHub
+
+## Features
+
+- Simple HTML project structure
+- Separate CSS stylesheet
+- Git version control
+- Documented development workflow
+- Progress tracking for learning Git and GitHub
