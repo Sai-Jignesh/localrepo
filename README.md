@@ -56,3 +56,18 @@
 - Git version control
 - Documented development workflow
 - Progress tracking for learning Git and GitHub
+
+## Common Git Mistakes
+
+- Forgetting to save files before staging.
+- Committing without reviewing changes.
+- Forgetting to push commits to GitHub.
+- Working in the wrong repository folder.
+
+## Git Troubleshooting
+
+- Check the current folder with `pwd`.
+- Check repository changes with `git status`.
+- Review edits with `git diff`.
+- Check the latest commit with `git log -1 --oneline`.
+- Confirm the remote repository with `git remote -v`.
