@@ -28,7 +28,20 @@
 - git push
 - git pull
 
+## Project Goals
 
+- Practise Git commands with real changes.
+- Learn how to stage, commit, and push code.
+- Build a simple, well-organized HTML and CSS project.
+- Track progress through meaningful improvements.
+
+## Development Workflow
+
+1. Edit the project files.
+2. Check changes using `git status`.
+3. Review edits using `git diff`.
+4. Stage and commit completed changes.
+5. Push commits to GitHub.
 
 ## Today's Progress
 
