@@ -71,3 +71,13 @@
 - Review edits with `git diff`.
 - Check the latest commit with `git log -1 --oneline`.
 - Confirm the remote repository with `git remote -v`.
+
+## Project Checklist
+
+- [x] Create the local Git repository
+- [x] Connect the project to GitHub
+- [x] Practise commits and pushes
+- [x] Document common Git commands
+- [ ] Learn branching and merging
+- [ ] Practise resolving merge conflicts
+- [ ] Build a feature on a separate branch
