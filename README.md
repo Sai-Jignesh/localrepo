@@ -81,3 +81,5 @@
 - [ ] Learn branching and merging
 - [ ] Practise resolving merge conflicts
 - [ ] Build a feature on a separate branch
+## Branch Practice
+This section was added on a separate Git branch.
