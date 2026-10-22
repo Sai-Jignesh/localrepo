@@ -1,6 +1,17 @@
 <p>This is a new repository.</p>
-<p> This is a feature (Drop down) </p>
-<p> This is a feature (button) </p>
+<section>
+    <h2>Git Learning Resources</h2>
+
+    <label for="git-topics">Choose a topic:</label>
+    <select id="git-topics">
+        <option value="">Select a topic</option>
+        <option value="commit">Git commits</option>
+        <option value="branch">Git branches</option>
+        <option value="github">GitHub collaboration</option>
+    </select>
+
+    <p id="topic-message">Choose a topic to get started.</p>
+</section>
 <p> hi every one</p>
  <p>I am learning Git step by step.</p>
  <!-- Practising Git commits every day -->
@@ -21,3 +32,18 @@
     <h2>My Git Practice — Day 2</h2>
     <p>Today I am improving my project and learning Git.</p>
 </section>
+<script>
+    const topicSelect = document.getElementById("git-topics");
+    const topicMessage = document.getElementById("topic-message");
+
+    topicSelect.addEventListener("change", function () {
+        const messages = {
+            commit: "Learn to save changes with git add and git commit.",
+            branch: "Learn to create and switch branches safely.",
+            github: "Learn to share code and collaborate using GitHub."
+        };
+
+        topicMessage.textContent =
+            messages[topicSelect.value] || "Choose a topic to get started.";
+    });
+</script>
