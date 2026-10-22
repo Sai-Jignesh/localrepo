@@ -1,35 +1,56 @@
-p{
-    color: red;
-}
-/* My GitHub learning project */
-body {
-    font-family: Arial, sans-serif;
-}
-h1 {
-    color: darkblue;
+* {
+    box-sizing: border-box;
 }
 
-p {
+body {
+    margin: 0;
+    padding: 24px;
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fb;
+    color: #1f2937;
     line-height: 1.6;
 }
-body {
-    margin: 20px;
+
+header {
+    padding: 32px;
+    margin-bottom: 24px;
+    background: #173b67;
+    color: white;
+    border-radius: 12px;
 }
 
-h1 {
-    font-size: 28px;
+header h1 {
+    margin-top: 0;
+    margin-bottom: 8px;
 }
+
+header p {
+    margin-bottom: 0;
+}
+
 h2 {
-    color: darkgreen;
+    color: #173b67;
+}
+
+section {
+    margin-top: 24px;
+    padding: 24px;
+    background: white;
+    border: 1px solid #dbe3ee;
+    border-radius: 12px;
 }
 
 li {
-  
     margin-bottom: 8px;
 }
-section {
-    margin-top: 20px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+
+@media (max-width: 600px) {
+    body {
+        padding: 12px;
+    }
+
+    header,
+    section {
+        padding: 18px;
+    }
 }
