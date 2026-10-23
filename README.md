@@ -96,3 +96,10 @@ This section was added on a separate Git branch.
 - Review changes with `git diff`.
 - Commit related changes together.
 - Push to the correct remote branch.
+
+## Branch Commands
+
+- `git branch` — List local branches.
+- `git switch -c feature-name` — Create and switch to a branch.
+- `git switch main` — Return to the main branch.
+- `git merge feature-name` — Merge a branch into the current branch.
