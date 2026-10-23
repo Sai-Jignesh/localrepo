@@ -54,3 +54,22 @@ li {
         padding: 18px;
     }
 }
+section ul {
+    padding-left: 24px;
+}
+
+section li {
+    margin-bottom: 10px;
+}
+
+section li::marker {
+    color: #173b67;
+}
+
+section {
+    transition: box-shadow 0.2s ease;
+}
+
+section:hover {
+    box-shadow: 0 4px 14px rgba(23, 59, 103, 0.12);
+}
