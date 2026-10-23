@@ -88,3 +88,11 @@ This section was added on a separate Git branch.
 
 - `git restore <file>` — Discard unstaged changes to a file.
 - `git revert <commit>` — Create a new commit that undoes an earlier commit.
+
+## Before Every Push
+
+- Save all edited files.
+- Run `git status`.
+- Review changes with `git diff`.
+- Commit related changes together.
+- Push to the correct remote branch.
