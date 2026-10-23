@@ -73,3 +73,17 @@ section {
 section:hover {
     box-shadow: 0 4px 14px rgba(23, 59, 103, 0.12);
 }
+section label {
+    display: inline-block;
+    margin: 8px 0;
+    cursor: pointer;
+}
+
+section input[type="checkbox"] {
+    accent-color: #173b67;
+    margin-right: 8px;
+}
+
+section label:hover {
+    color: #173b67;
+}
