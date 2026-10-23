@@ -103,3 +103,10 @@ This section was added on a separate Git branch.
 - `git switch -c feature-name` — Create and switch to a branch.
 - `git switch main` — Return to the main branch.
 - `git merge feature-name` — Merge a branch into the current branch.
+
+## Git Productivity Tips
+
+- `git log --oneline` — View a compact commit history.
+- `git diff --staged` — Review changes ready to commit.
+- `git remote -v` — Check connected remote repositories.
+- `git status -sb` — View a short summary of repository status.
