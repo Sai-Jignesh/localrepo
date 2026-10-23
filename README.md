@@ -83,3 +83,8 @@
 - [ ] Build a feature on a separate branch
 ## Branch Practice
 This section was added on a separate Git branch.
+
+## Undoing Changes Safely
+
+- `git restore <file>` — Discard unstaged changes to a file.
+- `git revert <commit>` — Create a new commit that undoes an earlier commit.
