@@ -152,3 +152,22 @@ body.dark-mode h2 {
 #clear-notes:hover {
     background: #991b1b;
 }
+#print-page {
+    padding: 10px 16px;
+    background: #173b67;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+@media print {
+    button {
+        display: none;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+}
