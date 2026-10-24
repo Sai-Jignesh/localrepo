@@ -95,3 +95,24 @@ footer {
     font-size: 14px;
     border-top: 1px solid #dbe3ee;
 }
+body.dark-mode {
+    background-color: #111827;
+    color: #f9fafb;
+}
+
+body.dark-mode section {
+    background-color: #1f2937;
+    color: #f9fafb;
+    border-color: #374151;
+}
+
+body.dark-mode h2 {
+    color: #93c5fd;
+}
+
+#theme-toggle {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
