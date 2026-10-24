@@ -138,3 +138,9 @@
         document.getElementById("char-count").textContent = "0";
     });
 </script>
+<p>Words: <span id="word-count">0</span></p>
+notes.addEventListener("input", function () {
+    counter.textContent = notes.value.length;
+    document.getElementById("word-count").textContent =
+        notes.value.trim() ? notes.value.trim().split(/\s+/).length : 0;
+});
