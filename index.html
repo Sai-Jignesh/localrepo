@@ -91,3 +91,17 @@
 <footer>
     <p>Git Learning Project | Built with HTML, CSS and Git.</p>
 </footer>
+<section>
+    <h2>Current Date and Time</h2>
+    <p id="datetime">Loading...</p>
+</section>
+
+<script>
+    function updateDateTime() {
+        document.getElementById("datetime").textContent =
+            new Date().toLocaleString();
+    }
+
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+</script>
