@@ -145,3 +145,9 @@ notes.addEventListener("input", function () {
         notes.value.trim() ? notes.value.trim().split(/\s+/).length : 0;
 });
 <button id="print-page" onclick="window.print()">Print Learning Page</button>
+<button id="reset-notes">Reset Notes</button>
+document.getElementById("reset-notes").addEventListener("click", function () {
+    notes.value = "";
+    counter.textContent = "0";
+    document.getElementById("word-count").textContent = "0";
+});
