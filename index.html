@@ -115,3 +115,18 @@
 <button id="top-button" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
     Back to Top ↑
 </button>
+<section>
+    <h2>Git Notes</h2>
+    <textarea id="git-notes" maxlength="300"
+        placeholder="Write your Git learning notes..."></textarea>
+    <p>Characters: <span id="char-count">0</span>/300</p>
+</section>
+
+<script>
+    const notes = document.getElementById("git-notes");
+    const counter = document.getElementById("char-count");
+
+    notes.addEventListener("input", function () {
+        counter.textContent = notes.value.length;
+    });
+</script>
