@@ -130,3 +130,11 @@
         counter.textContent = notes.value.length;
     });
 </script>
+<button id="clear-notes">Clear Notes</button>
+
+<script>
+    document.getElementById("clear-notes").addEventListener("click", function () {
+        document.getElementById("git-notes").value = "";
+        document.getElementById("char-count").textContent = "0";
+    });
+</script>

@@ -139,3 +139,16 @@ body.dark-mode h2 {
     font: inherit;
     resize: vertical;
 }
+#clear-notes {
+    margin-top: 10px;
+    padding: 9px 14px;
+    background: #b91c1c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#clear-notes:hover {
+    background: #991b1b;
+}
