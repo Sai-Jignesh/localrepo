@@ -171,3 +171,12 @@ body.dark-mode h2 {
         color: black;
     }
 }
+#goal-progress {
+    font-weight: bold;
+    color: #173b67;
+    margin-top: 16px;
+}
+
+section label {
+    line-height: 2;
+}

@@ -151,3 +151,25 @@ document.getElementById("reset-notes").addEventListener("click", function () {
     counter.textContent = "0";
     document.getElementById("word-count").textContent = "0";
 });
+<section>
+    <h2>Today's Learning Goals</h2>
+    <label><input type="checkbox"> Practise Git commits</label><br>
+    <label><input type="checkbox"> Understand branches</label><br>
+    <label><input type="checkbox"> Review HTML changes</label><br>
+    <label><input type="checkbox"> Practise CSS styling</label>
+    <p id="goal-progress">0 of 4 goals completed</p>
+</section>
+
+<script>
+    const goals = document.querySelectorAll(
+        'section input[type="checkbox"]'
+    );
+
+    function updateProgress() {
+        const completed = [...goals].filter(goal => goal.checked).length;
+        document.getElementById("goal-progress").textContent =
+            `${completed} of ${goals.length} goals completed`;
+    }
+
+    goals.forEach(goal => goal.addEventListener("change", updateProgress));
+</script>
