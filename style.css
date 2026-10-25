@@ -180,3 +180,16 @@ body.dark-mode h2 {
 section label {
     line-height: 2;
 }
+#back-to-top {
+    display: inline-block;
+    margin: 20px 0;
+    padding: 10px 16px;
+    background: #173b67;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+#back-to-top:hover {
+    background: #24558c;
+}
