@@ -184,3 +184,23 @@ document.getElementById("reset-notes").addEventListener("click", function () {
     document.getElementById("reading-time").textContent =
         `${minutes} minute${minutes === 1 ? "" : "s"}`;
 </script>
+<section>
+    <h2>Quick Git Command</h2>
+    <code id="git-command">git status</code>
+    <button id="copy-command">Copy Command</button>
+    <span id="copy-message"></span>
+</section>
+
+<script>
+    document.getElementById("copy-command").addEventListener("click", async () => {
+        try {
+            await navigator.clipboard.writeText(
+                document.getElementById("git-command").textContent
+            );
+            document.getElementById("copy-message").textContent = "Copied!";
+        } catch {
+            document.getElementById("copy-message").textContent =
+                "Copy unavailable in this browser.";
+        }
+    });
+</script>
