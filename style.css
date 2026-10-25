@@ -193,3 +193,7 @@ section label {
 #back-to-top:hover {
     background: #24558c;
 }
+#reading-time {
+    font-weight: bold;
+    color: #173b67;
+}

@@ -175,3 +175,12 @@ document.getElementById("reset-notes").addEventListener("click", function () {
 </script>
 
 <a href="#" id="back-to-top">Back to Top ↑</a>
+
+<p>Estimated reading time: <span id="reading-time">1 minute</span></p>
+<script>
+    const textLength = document.body.innerText.trim().split(/\s+/).length;
+    const minutes = Math.max(1, Math.ceil(textLength / 200));
+
+    document.getElementById("reading-time").textContent =
+        `${minutes} minute${minutes === 1 ? "" : "s"}`;
+</script>
