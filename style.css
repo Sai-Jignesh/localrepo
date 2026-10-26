@@ -221,3 +221,12 @@ section label {
 #command-list li {
     margin-bottom: 8px;
 }
+#clear-search {
+    padding: 9px 14px;
+    margin-bottom: 12px;
+    background: #173b67;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
