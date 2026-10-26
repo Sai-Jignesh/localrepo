@@ -213,3 +213,29 @@ document.getElementById("reset-notes").addEventListener("click", function () {
         View on GitHub
     </a>
 </p>
+<section>
+    <h2>Search Git Commands</h2>
+    <input type="text" id="command-search" placeholder="Search commands...">
+
+    <ul id="command-list">
+        <li>git status — Check repository changes</li>
+        <li>git add — Stage changes</li>
+        <li>git commit — Save a snapshot</li>
+        <li>git push — Upload commits</li>
+        <li>git pull — Download remote changes</li>
+        <li>git branch — List branches</li>
+    </ul>
+</section>
+
+<script>
+    const searchInput = document.getElementById("command-search");
+    const commandItems = document.querySelectorAll("#command-list li");
+
+    searchInput.addEventListener("input", function () {
+        const query = searchInput.value.toLowerCase();
+
+        commandItems.forEach(item => {
+            item.hidden = !item.textContent.toLowerCase().includes(query);
+        });
+    });
+</script>

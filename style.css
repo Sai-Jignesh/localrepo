@@ -209,3 +209,15 @@ section label {
     margin-left: 10px;
     font-size: 14px;
 }
+#command-search {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font: inherit;
+}
+
+#command-list li {
+    margin-bottom: 8px;
+}
