@@ -240,3 +240,39 @@ document.getElementById("reset-notes").addEventListener("click", function () {
     });
 </script>
 <button id="clear-search">Clear Search</button>
+<select id="command-category">
+    <option value="all">All commands</option>
+    <option value="git status">Status</option>
+    <option value="git add">Staging</option>
+    <option value="git commit">Commits</option>
+    <option value="git push">Publishing</option>
+    <option value="git branch">Branches</option>
+</select>
+<script>
+    const searchInput = document.getElementById("command-search");
+    const commandItems = document.querySelectorAll("#command-list li");
+    const categorySelect = document.getElementById("command-category");
+
+    function filterCommands() {
+        const query = searchInput.value.toLowerCase();
+        const category = categorySelect.value.toLowerCase();
+
+        commandItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            const matchesSearch = text.includes(query);
+            const matchesCategory =
+                category === "all" || text.includes(category);
+
+            item.hidden = !(matchesSearch && matchesCategory);
+        });
+    }
+
+    searchInput.addEventListener("input", filterCommands);
+    categorySelect.addEventListener("change", filterCommands);
+
+    document.getElementById("clear-search").addEventListener("click", function () {
+        searchInput.value = "";
+        categorySelect.value = "all";
+        filterCommands();
+    });
+</script>
