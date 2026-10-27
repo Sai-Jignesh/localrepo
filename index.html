@@ -274,5 +274,12 @@ document.getElementById("command-count").textContent =
     document.querySelectorAll("#command-list li").length;
 </script>
 
+<p>Last updated: <span id="last-updated"></span></p>
+
+<script>
+document.getElementById("last-updated").textContent =
+    new Date().toLocaleDateString();
+</script>
+
 </body>
 </html>
