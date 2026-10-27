@@ -266,5 +266,13 @@ document.getElementById("command-search").addEventListener("input", function () 
 </script>
 
 <p id="no-results" hidden>No matching Git commands found.</p>
+
+<p>Total commands: <span id="command-count">6</span></p>
+
+<script>
+document.getElementById("command-count").textContent =
+    document.querySelectorAll("#command-list li").length;
+</script>
+
 </body>
 </html>
