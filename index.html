@@ -230,28 +230,8 @@ document.getElementById("reset-notes").addEventListener("click", function () {
 <script>
     const searchInput = document.getElementById("command-search");
     const commandItems = document.querySelectorAll("#command-list li");
-
-    searchInput.addEventListener("input", function () {
-        const query = searchInput.value.toLowerCase();
-
-        commandItems.forEach(item => {
-            item.hidden = !item.textContent.toLowerCase().includes(query);
-        });
-    });
-</script>
-<button id="clear-search">Clear Search</button>
-<select id="command-category">
-    <option value="all">All commands</option>
-    <option value="git status">Status</option>
-    <option value="git add">Staging</option>
-    <option value="git commit">Commits</option>
-    <option value="git push">Publishing</option>
-    <option value="git branch">Branches</option>
-</select>
-<script>
-    const searchInput = document.getElementById("command-search");
-    const commandItems = document.querySelectorAll("#command-list li");
     const categorySelect = document.getElementById("command-category");
+    const clearButton = document.getElementById("clear-search");
 
     function filterCommands() {
         const query = searchInput.value.toLowerCase();
@@ -270,10 +250,11 @@ document.getElementById("reset-notes").addEventListener("click", function () {
     searchInput.addEventListener("input", filterCommands);
     categorySelect.addEventListener("change", filterCommands);
 
-    document.getElementById("clear-search").addEventListener("click", function () {
+    clearButton.addEventListener("click", function () {
         searchInput.value = "";
         categorySelect.value = "all";
         filterCommands();
     });
 </script>
-<p>Total commands: <span id="command-count">6</span></p>
+</body>
+</html>
