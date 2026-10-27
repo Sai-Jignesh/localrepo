@@ -254,3 +254,14 @@ section label {
   color: #222;
   border-radius: 4px;
 }
+
+#git-troubleshooting {
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+}
+
+#git-troubleshooting li {
+  margin-bottom: 10px;
+}
