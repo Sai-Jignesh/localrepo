@@ -237,3 +237,12 @@ section label {
     border-radius: 6px;
     font: inherit;
 }
+#command-list li {
+    padding: 8px;
+    border-bottom: 1px solid #dbe3ee;
+    transition: background-color 0.2s ease;
+}
+
+#command-list li:hover {
+    background-color: #e8eef6;
+}
