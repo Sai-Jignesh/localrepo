@@ -246,3 +246,11 @@ section label {
 #command-list li:hover {
     background-color: #e8eef6;
 }
+.git-tip {
+  margin-top: 16px;
+  padding: 12px;
+  border-left: 4px solid #2ea44f;
+  background-color: #f0f8f1;
+  color: #222;
+  border-radius: 4px;
+}
