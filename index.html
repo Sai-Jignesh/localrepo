@@ -256,5 +256,15 @@ document.getElementById("reset-notes").addEventListener("click", function () {
         filterCommands();
     });
 </script>
+<script>
+document.getElementById("command-search").addEventListener("input", function () {
+    const items = document.querySelectorAll("#command-list li");
+    const visible = [...items].some(item => !item.hidden);
+
+    document.getElementById("no-results").hidden = visible;
+});
+</script>
+
+<p id="no-results" hidden>No matching Git commands found.</p>
 </body>
 </html>
