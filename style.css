@@ -306,3 +306,9 @@ button:hover {
 .card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
+/* Improve image presentation */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
