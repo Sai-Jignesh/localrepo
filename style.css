@@ -320,3 +320,11 @@ footer {
   border-top: 1px solid #ddd;
   font-size: 14px;
 }
+/* Style learning sections */
+#learning-note,
+#git-reminder {
+  margin-top: 20px;
+  padding: 16px;
+  border-left: 4px solid #2ea44f;
+  border-radius: 6px;
+}
