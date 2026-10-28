@@ -328,3 +328,11 @@ footer {
   border-left: 4px solid #2ea44f;
   border-radius: 6px;
 }
+/* Style the daily goal section */
+#daily-goal {
+  margin-top: 20px;
+  padding: 16px;
+  background-color: #f6f8fa;
+  border-radius: 8px;
+  line-height: 1.6;
+}
