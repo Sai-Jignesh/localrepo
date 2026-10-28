@@ -265,3 +265,17 @@ section label {
 #git-troubleshooting li {
   margin-bottom: 10px;
 }
+/* Small visual improvement */
+body {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background-color: #2ea44f;
+  color: white;
+}
+
+code {
+  border-radius: 4px;
+  padding: 2px 5px;
+}
