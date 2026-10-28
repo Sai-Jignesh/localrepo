@@ -288,3 +288,12 @@ a {
 a:hover {
   text-decoration-thickness: 2px;
 }
+/* Improve button interaction */
+button {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
