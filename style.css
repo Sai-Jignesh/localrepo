@@ -343,3 +343,11 @@ input:focus-visible {
   outline: 2px solid #2ea44f;
   outline-offset: 3px;
 }
+/* Style Git best practice section */
+#git-best-practice {
+  margin-top: 20px;
+  padding: 16px;
+  background-color: #eef6ff;
+  border-left: 4px solid #0969da;
+  border-radius: 8px;
+}
