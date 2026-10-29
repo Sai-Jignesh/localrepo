@@ -351,3 +351,14 @@ input:focus-visible {
   border-left: 4px solid #0969da;
   border-radius: 8px;
 }
+/* Style learning resources */
+#learning-resources {
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+}
+
+#learning-resources li {
+  margin: 8px 0;
+}
