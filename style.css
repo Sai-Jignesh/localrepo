@@ -374,3 +374,11 @@ input:focus-visible {
 #git-checklist li {
   padding-left: 4px;
 }
+/* Style the Git workflow guide */
+#git-workflow {
+  margin-top: 20px;
+  padding: 16px;
+  background-color: #f6f8fa;
+  border-radius: 8px;
+  line-height: 1.8;
+}
