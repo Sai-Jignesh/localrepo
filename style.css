@@ -362,3 +362,15 @@ input:focus-visible {
 #learning-resources li {
   margin: 8px 0;
 }
+/* Style the Git checklist */
+#git-checklist {
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  line-height: 1.8;
+}
+
+#git-checklist li {
+  padding-left: 4px;
+}
