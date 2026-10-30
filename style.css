@@ -390,3 +390,11 @@ section {
 section:hover {
   background-color: rgba(46, 164, 79, 0.03);
 }
+/* Style daily Git tip */
+#daily-tip {
+  margin-top: 20px;
+  padding: 16px;
+  background: #f0f8f1;
+  border-left: 4px solid #2ea44f;
+  border-radius: 8px;
+}
