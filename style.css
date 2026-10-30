@@ -414,3 +414,11 @@ section:hover {
   border-radius: 10px;
   line-height: 1.7;
 }
+/* Style project message */
+#project-message {
+  margin-top: 20px;
+  padding: 18px;
+  background-color: #f0f8f1;
+  border-radius: 10px;
+  text-align: center;
+}
