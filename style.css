@@ -382,3 +382,11 @@ input:focus-visible {
   border-radius: 8px;
   line-height: 1.8;
 }
+/* Smooth section transitions */
+section {
+  transition: background-color 0.2s ease;
+}
+
+section:hover {
+  background-color: rgba(46, 164, 79, 0.03);
+}
