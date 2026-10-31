@@ -427,3 +427,8 @@ section {
   border-bottom: 1px solid #e5e7eb;
   padding-bottom: 12px;
 }
+/* Improve text readability */
+p {
+  line-height: 1.7;
+  letter-spacing: 0.2px;
+}
