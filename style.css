@@ -470,3 +470,11 @@ p {
   border-radius: 20px;
   font-size: 13px;
 }
+/* Style coding habit section */
+#coding-habit {
+  margin-top: 20px;
+  padding: 18px;
+  background: #f6f8fa;
+  border-radius: 10px;
+  line-height: 1.7;
+}
