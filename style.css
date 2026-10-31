@@ -440,3 +440,16 @@ p {
   border-radius: 8px;
   background: #f6f8fa;
 }
+/* Style developer quote */
+#git-quote {
+  margin-top: 20px;
+  padding: 18px;
+  background: #f6f8fa;
+  border-left: 4px solid #2ea44f;
+  border-radius: 8px;
+}
+
+#git-quote blockquote {
+  font-style: italic;
+  margin: 10px 0;
+}
