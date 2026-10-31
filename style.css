@@ -453,3 +453,20 @@ p {
   font-style: italic;
   margin: 10px 0;
 }
+/* Style project status */
+#project-status {
+  margin-top: 20px;
+  padding: 18px;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+}
+
+#project-status span {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 5px 12px;
+  background: #dafbe1;
+  color: #116329;
+  border-radius: 20px;
+  font-size: 13px;
+}
