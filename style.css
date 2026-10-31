@@ -432,3 +432,11 @@ p {
   line-height: 1.7;
   letter-spacing: 0.2px;
 }
+/* Style developer note */
+#developer-note {
+  margin-top: 20px;
+  padding: 18px;
+  border-left: 4px solid #0969da;
+  border-radius: 8px;
+  background: #f6f8fa;
+}
