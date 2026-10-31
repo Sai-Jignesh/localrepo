@@ -478,3 +478,8 @@ p {
   border-radius: 10px;
   line-height: 1.7;
 }
+/* Improve heading appearance */
+h2 {
+  letter-spacing: 0.4px;
+  margin-bottom: 12px;
+}
