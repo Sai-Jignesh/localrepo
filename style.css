@@ -483,3 +483,11 @@ h2 {
   letter-spacing: 0.4px;
   margin-bottom: 12px;
 }
+/* Add smooth transitions to links */
+a {
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  opacity: 0.8;
+}
