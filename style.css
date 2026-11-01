@@ -507,4 +507,12 @@ li {
   border-left: 4px solid #2ea44f;
   border-radius: 8px;
 }
+/* Style project update section */
+#project-update {
+  margin-top: 20px;
+  padding: 18px;
+  background: #f6f8fa;
+  border-radius: 10px;
+  text-align: center;
+}
 
