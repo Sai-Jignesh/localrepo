@@ -491,3 +491,11 @@ a {
 a:hover {
   opacity: 0.8;
 }
+/* Improve list spacing */
+ul {
+  padding-left: 24px;
+}
+
+li {
+  margin-bottom: 6px;
+}
