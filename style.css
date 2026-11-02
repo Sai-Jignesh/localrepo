@@ -23,3 +23,36 @@ button {
     font-family: inherit;
     cursor: pointer;
 }
+/* NOVA Bank Navigation Bar */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 7%;
+    background-color: #111a2e;
+    border-bottom: 1px solid #26334a;
+}
+
+.logo {
+    font-size: 26px;
+    color: #ffffff;
+}
+
+.logo span {
+    color: #d4af37;
+}
+
+.navbar nav {
+    display: flex;
+    gap: 30px;
+}
+
+.navbar nav a {
+    color: #cbd5e1;
+    font-size: 15px;
+}
+
+.navbar nav a:hover {
+    color: #d4af37;
+}
