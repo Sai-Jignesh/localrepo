@@ -160,3 +160,43 @@ button {
         font-size: 15px;
     }
 }
+/* NOVA Bank Feature Cards */
+
+.features {
+    padding: 60px 7%;
+    background-color: #111a2e;
+}
+
+.features h2 {
+    font-size: 30px;
+    margin-bottom: 35px;
+}
+
+.feature-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+
+.feature-card {
+    padding: 28px;
+    background-color: #1a263d;
+    border: 1px solid #293750;
+    border-radius: 10px;
+}
+
+.feature-card h3 {
+    color: #d4af37;
+    margin-bottom: 14px;
+}
+
+.feature-card p {
+    color: #aab4c5;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .feature-container {
+        grid-template-columns: 1fr;
+    }
+}
