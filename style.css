@@ -134,3 +134,29 @@ button {
     background-color: #f0cf63;
     transform: translateY(-2px);
 }
+/* Mobile Responsive Design */
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 18px 5%;
+        flex-wrap: wrap;
+        gap: 18px;
+    }
+
+    .navbar nav {
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .hero {
+        padding: 80px 5%;
+    }
+
+    .hero h2 {
+        font-size: 36px;
+    }
+
+    .description {
+        font-size: 15px;
+    }
+}
