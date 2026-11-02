@@ -56,3 +56,18 @@ button {
 .navbar nav a:hover {
     color: #d4af37;
 }
+/* Login Button */
+
+.login-btn {
+    padding: 10px 24px;
+    background-color: #d4af37;
+    color: #0b1120;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.login-btn:hover {
+    background-color: #f0cf63;
+}
