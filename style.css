@@ -117,3 +117,20 @@ button {
     font-size: 17px;
     margin-bottom: 30px;
 }
+/* Get Started Button */
+
+.get-started {
+    padding: 14px 32px;
+    background-color: #d4af37;
+    color: #0b1120;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+    width: fit-content;
+}
+
+.get-started:hover {
+    background-color: #f0cf63;
+    transform: translateY(-2px);
+}
