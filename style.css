@@ -71,3 +71,49 @@ button {
 .login-btn:hover {
     background-color: #f0cf63;
 }
+/* Login Button */
+
+.login-btn {
+    padding: 10px 24px;
+    background-color: #d4af37;
+    color: #0b1120;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.login-btn:hover {
+    background-color: #f0cf63;
+}
+/* NOVA Bank Hero Section */
+
+.hero {
+    padding: 120px 7%;
+    min-height: 75vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.tagline {
+    color: #d4af37;
+    font-size: 13px;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+}
+
+.hero h2 {
+    font-size: 52px;
+    margin-bottom: 20px;
+}
+
+.hero h2 span {
+    color: #d4af37;
+}
+
+.description {
+    color: #aab4c5;
+    font-size: 17px;
+    margin-bottom: 30px;
+}
