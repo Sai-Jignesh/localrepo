@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="login-container">
+
+        <h1>NOVA<span>Bank</span></h1>
+        <h2>Create Your Account</h2>
+        <p>Join NOVA Bank today</p>
+
+        <form id="register-form">
+
+            <label for="fullname">Full Name</label>
+            <input type="text" id="fullname"
+                   placeholder="Enter your full name" required>
+
+            <label for="email">Email Address</label>
+            <input type="email" id="email"
+                   placeholder="Enter your email" required>
+
+            <label for="phone">Mobile Number</label>
+            <input type="tel" id="phone"
+                   placeholder="Enter your mobile number"
+                   pattern="[0-9]{10}" required>
+
+            <label for="password">Create Password</label>
+            <input type="password" id="password"
+                   placeholder="Create a password"
+                   minlength="8" required>
+
+            <label for="confirm-password">Confirm Password</label>
+            <input type="password" id="confirm-password"
+                   placeholder="Confirm your password" required>
+
+            <button type="submit" class="login-submit">
+                Create Account
+            </button>
+
+        </form>
+
+        <p>Already have an account?
+            <a href="login.html">Login</a>
+        </p>
+
+        <a href="index.html">Back to Home</a>
+
+    </div>
+
+    <script>
+        document.getElementById("register-form")
+            .addEventListener("submit", function(event) {
+                event.preventDefault();
+
+                const password =
+                    document.getElementById("password").value;
+
+                const confirmPassword =
+                    document.getElementById("confirm-password").value;
+
+                if (password !== confirmPassword) {
+                    alert("Passwords do not match!");
+                    return;
+                }
+
+                alert("Registration form validated! Account creation will be connected to the backend later.");
+            });
+    </script>
+
+</body>
+</html>
