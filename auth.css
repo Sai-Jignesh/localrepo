@@ -117,3 +117,13 @@
 .login-container input:focus {
     box-shadow: 0 0 6px rgba(212, 175, 55, 0.2);
 }
+/* Registration form spacing */
+
+.login-container form label {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.login-container form input {
+    margin-bottom: 5px;
+}
