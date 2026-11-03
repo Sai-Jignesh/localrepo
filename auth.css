@@ -1,0 +1,92 @@
+
+/* NOVA Bank Authentication Styles */
+
+.login-container {
+    width: 380px;
+    max-width: 90%;
+    margin: 70px auto;
+    padding: 35px;
+    background: #111a2e;
+    border: 1px solid #293750;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.login-container h1 {
+    color: #ffffff;
+    margin-bottom: 25px;
+}
+
+.login-container h1 span {
+    color: #d4af37;
+}
+
+.login-container h2 {
+    margin-bottom: 10px;
+}
+
+.login-container p {
+    color: #aab4c5;
+    margin: 15px 0;
+}
+
+.login-container form {
+    text-align: left;
+}
+
+.login-container label {
+    display: block;
+    margin: 15px 0 8px;
+    color: #ffffff;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 12px;
+    background: #0b1120;
+    color: #ffffff;
+    border: 1px solid #293750;
+    border-radius: 6px;
+    outline: none;
+}
+
+.login-container input:focus {
+    border-color: #d4af37;
+}
+
+.login-submit {
+    width: 100%;
+    padding: 13px;
+    margin-top: 22px;
+    background: #d4af37;
+    color: #0b1120;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.login-submit:hover {
+    background: #f0cf63;
+}
+
+.login-container a {
+    color: #d4af37;
+}
+
+.password-field {
+    display: flex;
+    gap: 8px;
+}
+
+.password-field input {
+    flex: 1;
+    min-width: 0;
+}
+
+.password-field button {
+    padding: 0 12px;
+    background: #293750;
+    color: white;
+    border: none;
+    border-radius: 6px;
+}
