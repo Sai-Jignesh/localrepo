@@ -270,3 +270,18 @@ button {
     border: 1px solid #293750;
     border-radius: 6px;
 }
+.login-container button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 22px;
+    background-color: #d4af37;
+    color: #0b1120;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.login-container button:hover {
+    background-color: #f0cf63;
+}
