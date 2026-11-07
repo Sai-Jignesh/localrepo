@@ -270,3 +270,11 @@
     box-shadow: 0 0 0 1000px #0b1120 inset;
     transition: background-color 5000s ease-in-out 0s;
 }
+/* Clear keyboard focus indicators */
+
+.login-container input:focus-visible,
+.login-container button:focus-visible,
+.login-container a:focus-visible {
+    outline: 2px solid #d4af37;
+    outline-offset: 3px;
+}
