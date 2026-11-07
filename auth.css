@@ -278,3 +278,12 @@
     outline: 2px solid #d4af37;
     outline-offset: 3px;
 }
+/* Registration password guidance */
+
+.field-hint {
+    display: block;
+    margin-top: 6px;
+    color: #aab4c5;
+    font-size: 12px;
+    line-height: 1.5;
+}
