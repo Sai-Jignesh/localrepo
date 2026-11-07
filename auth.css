@@ -210,3 +210,14 @@
     letter-spacing: 0.3px;
     color: #e2e8f0;
 }
+/* Authentication link styling */
+
+.login-container a {
+    transition: color 0.2s ease;
+    text-underline-offset: 4px;
+}
+
+.login-container a:hover {
+    color: #f0cf63;
+    text-decoration: underline;
+}
