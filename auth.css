@@ -232,3 +232,12 @@
     background-color: #d4af37;
     color: #0b1120;
 }
+/* Form validation feedback */
+
+.login-container input:invalid:not(:placeholder-shown) {
+    border-color: #e05252;
+}
+
+.login-container input:valid:not(:placeholder-shown) {
+    border-color: #2ea44f;
+}
