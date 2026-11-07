@@ -156,3 +156,18 @@
     min-height: 42px;
     font-size: 13px;
 }
+/* Consistent form field spacing */
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.login-container form label {
+    margin-top: 10px;
+}
+
+.login-container form input {
+    margin-bottom: 5px;
+}
