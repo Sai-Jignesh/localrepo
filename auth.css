@@ -241,3 +241,14 @@
 .login-container input:valid:not(:placeholder-shown) {
     border-color: #2ea44f;
 }
+/* Respect reduced motion preferences */
+
+@media (prefers-reduced-motion: reduce) {
+    .login-container,
+    .login-container button,
+    .login-container input,
+    .login-container a {
+        transition: none;
+        animation: none;
+    }
+}
