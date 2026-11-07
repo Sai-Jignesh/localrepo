@@ -263,3 +263,10 @@
     max-width: 100%;
     min-width: 0;
 }
+/* Dark theme browser autofill */
+
+.login-container input:-webkit-autofill {
+    -webkit-text-fill-color: #ffffff;
+    box-shadow: 0 0 0 1000px #0b1120 inset;
+    transition: background-color 5000s ease-in-out 0s;
+}
