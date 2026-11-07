@@ -221,3 +221,14 @@
     color: #f0cf63;
     text-decoration: underline;
 }
+/* Password visibility button */
+
+.password-field button {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.password-field button:hover {
+    background-color: #d4af37;
+    color: #0b1120;
+}
