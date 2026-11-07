@@ -171,3 +171,9 @@
 .login-container form input {
     margin-bottom: 5px;
 }
+/* Consistent authentication input height */
+
+.login-container input {
+    min-height: 44px;
+    font-size: 14px;
+}
