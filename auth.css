@@ -202,3 +202,11 @@
     border-color: #d4af37;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
+/* Authentication label styling */
+
+.login-container label {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: #e2e8f0;
+}
