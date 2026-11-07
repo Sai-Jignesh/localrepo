@@ -252,3 +252,14 @@
         animation: none;
     }
 }
+/* Prevent authentication content overflow */
+
+.login-container {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.login-container form input {
+    max-width: 100%;
+    min-width: 0;
+}
