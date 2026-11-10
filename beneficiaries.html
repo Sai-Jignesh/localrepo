@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beneficiaries | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Beneficiaries</h1>
+        <p>Manage your saved recipients.</p>
+
+        <form id="beneficiary-form">
+            <label for="name">Beneficiary Name</label>
+            <input type="text" id="name" placeholder="Enter full name" required>
+
+            <label for="account">Account Number</label>
+            <input type="text" id="account" placeholder="Enter account number"
+                   pattern="[0-9]{9,18}" inputmode="numeric" required>
+
+            <label for="bank">Bank Name</label>
+            <input type="text" id="bank" placeholder="Enter bank name" required>
+
+            <button type="submit">Add Beneficiary</button>
+        </form>
+
+        <h2>Saved Beneficiaries</h2>
+        <div id="beneficiary-list"></div>
+        <p id="empty-message">No beneficiaries added yet.</p>
+        <p id="status-message" role="status"></p>
+
+        <a href="dashboard.html">Back to Dashboard</a>
+    </div>
+
+    <script>
+        const form = document.getElementById("beneficiary-form");
+        const list = document.getElementById("beneficiary-list");
+        const emptyMessage = document.getElementById("empty-message");
+        const statusMessage = document.getElementById("status-message");
+
+        let beneficiaries = JSON.parse(localStorage.getItem("novaBeneficiaries") || "[]");
+
+        function renderBeneficiaries() {
+            list.replaceChildren();
+            emptyMessage.hidden = beneficiaries.length > 0;
+
+            beneficiaries.forEach((person, index) => {
+                const item = document.createElement("div");
+                item.className = "beneficiary-item";
+
+                const details = document.createElement("div");
+                const name = document.createElement("strong");
+                const bank = document.createElement("small");
+
+                name.textContent = person.name;
+                bank.textContent = person.bank + " • " + person.account;
+
+                details.append(name, bank);
+
+                const removeButton = document.createElement("button");
+                removeButton.type = "button";
+                removeButton.textContent = "Remove";
+
+                removeButton.addEventListener("click", () => {
+                    beneficiaries.splice(index, 1);
+                    localStorage.setItem("novaBeneficiaries", JSON.stringify(beneficiaries));
+                    renderBeneficiaries();
+                });
+
+                item.append(details, removeButton);
+                list.appendChild(item);
+            });
+        }
+
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            if (!form.reportValidity()) return;
+
+            const account = document.getElementById("account").value;
+
+            if (beneficiaries.some(person => person.account === account)) {
+                statusMessage.textContent = "This account is already saved.";
+                return;
+            }
+
+            beneficiaries.push({
+                name: document.getElementById("name").value.trim(),
+                account,
+                bank: document.getElementById("bank").value.trim()
+            });
+
+            localStorage.setItem("novaBeneficiaries", JSON.stringify(beneficiaries));
+            form.reset();
+            statusMessage.textContent = "Beneficiary added successfully.";
+            renderBeneficiaries();
+        });
+
+        renderBeneficiaries();
+    </script>
+</body>
+</html>

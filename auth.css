@@ -509,3 +509,30 @@
         grid-template-columns: 1fr;
     }
 }
+
+.beneficiary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid #333;
+}
+
+.beneficiary-item div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.beneficiary-item small {
+    color: #aaa;
+    overflow-wrap: anywhere;
+}
+
+.beneficiary-item button {
+    width: auto;
+    padding: 8px 12px;
+    flex-shrink: 0;
+}
