@@ -412,3 +412,36 @@
         grid-template-columns: 1fr;
     }
 }
+
+.transaction-list {
+    margin: 25px 0;
+}
+
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 0;
+    border-bottom: 1px solid #333;
+}
+
+.transaction-item div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.transaction-item small {
+    color: #999;
+}
+
+.credit {
+    color: #2ecc71;
+    font-weight: 600;
+}
+
+.debit {
+    color: #e74c3c;
+    font-weight: 600;
+}
