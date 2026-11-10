@@ -4,51 +4,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Money Transfer | NOVA Bank</title>
+    <title>Transfer Money | NOVA Bank</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="auth.css">
 </head>
 <body>
-    <div class="login-container">
-        <h1>Money Transfer</h1>
-        <p>Enter recipient and transfer details.</p>
+    <main class="auth-container">
+        <section class="auth-card">
+            <h1>Transfer Money</h1>
+            <p>Complete your demo fund transfer details.</p>
 
-        <form id="transfer-form">
-            <label for="recipient">Recipient Name</label>
-            <input type="text" id="recipient" required>
+            <form id="transfer-form">
+                <label for="recipient">Recipient Name</label>
+                <input type="text" id="recipient" required>
 
-            <label for="account">Account Number</label>
-            <input type="text" id="account" pattern="[0-9]{9,18}"
-                   inputmode="numeric" required>
+                <label for="account">Account Number</label>
+                <input type="text" id="account" minlength="8" maxlength="18"
+                    pattern="[0-9]{8,18}" required>
 
-            <label for="amount">Transfer Amount (₹)</label>
-            <input type="number" id="amount" min="1" step="0.01" required>
+                <label for="amount">Transfer Amount (₹)</label>
+                <input type="number" id="amount" min="1" max="50000"
+                    step="0.01" required>
 
-            <label for="description">Description</label>
-            <input type="text" id="description" maxlength="100">
+                <p>Maximum demo transfer: ₹50,000</p>
+                <p id="amount-message" role="status"></p>
 
-            <button type="submit">Review Transfer</button>
-        </form>
+                <label for="description">Description</label>
+                <input type="text" id="description" maxlength="100">
 
-        <a href="dashboard.html">Back to Dashboard</a>
-    </div>
+                <button type="submit">Continue Transfer</button>
+            </form>
+
+            <p><a href="dashboard.html">Back to Dashboard</a></p>
+        </section>
+    </main>
 
     <script>
-        document.getElementById("transfer-form").addEventListener("submit", function(event) {
+        const form = document.getElementById("transfer-form");
+        const amountInput = document.getElementById("amount");
+        const amountMessage = document.getElementById("amount-message");
+        const transferLimit = 50000;
+
+        amountInput.addEventListener("input", () => {
+            const amount = Number(amountInput.value);
+
+            if (amount > transferLimit) {
+                amountMessage.textContent = "Amount exceeds the ₹50,000 demo transfer limit.";
+            } else if (amount <= 0 && amountInput.value !== "") {
+                amountMessage.textContent = "Enter an amount greater than zero.";
+            } else {
+                amountMessage.textContent = "";
+            }
+        });
+
+        form.addEventListener("submit", event => {
             event.preventDefault();
 
-            if (!this.reportValidity()) return;
+            const amount = Number(amountInput.value);
+
+            if (!Number.isFinite(amount) || amount <= 0 || amount > transferLimit) {
+                amountMessage.textContent = "Enter a valid amount up to ₹50,000.";
+                return;
+            }
 
             const transfer = {
                 recipient: document.getElementById("recipient").value.trim(),
-                account: document.getElementById("account").value,
-                amount: Number(document.getElementById("amount").value),
-                description: document.getElementById("description").value.trim()
+                account: document.getElementById("account").value.trim(),
+                amount,
+                description: document.getElementById("description").value.trim(),
+                createdAt: new Date().toISOString()
             };
 
-            if (!transfer.recipient || !Number.isFinite(transfer.amount) || transfer.amount <= 0) return;
+            if (!transfer.recipient || !/^[0-9]{8,18}$/.test(transfer.account)) {
+                amountMessage.textContent = "Enter valid recipient details.";
+                return;
+            }
 
-            sessionStorage.setItem("novaTransferReview", JSON.stringify(transfer));
+            sessionStorage.setItem("novaTransferDraft", JSON.stringify(transfer));
             window.location.href = "transfer-success.html";
         });
     </script>
