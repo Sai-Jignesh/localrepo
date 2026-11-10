@@ -9,55 +9,52 @@
     <link rel="stylesheet" href="auth.css">
 </head>
 <body>
-    <div class="login-container">
-        <h1>Welcome Back</h1>
-        <p>Login to your NOVA Bank account.</p>
+    <main class="auth-container">
+        <section class="auth-card">
+            <h1>Welcome Back</h1>
+            <p>Sign in to your NOVA Bank demo account.</p>
 
-        <form id="login-form">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" placeholder="Enter your email"
-                   autocomplete="username" required>
+            <form id="login-form">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
 
-            <label for="password">Password</label>
-            <div class="password-field">
-                <input type="password" id="password" placeholder="Enter your password"
-                       autocomplete="current-password" required>
-                <button type="button" id="toggle-password">Show</button>
-            </div>
+                <label for="password">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                    <button type="button" id="toggle-password">Show</button>
+                </div>
 
-            <div class="login-options">
-                <label class="remember-option">
+                <label>
                     <input type="checkbox" id="remember-me">
                     Remember me
                 </label>
-                <a href="forgot-password.html">Forgot Password?</a>
-            </div>
 
-            <button type="submit">Login</button>
-        </form>
+                <p><a href="forgot-password.html">Forgot Password?</a></p>
 
-        <p id="login-message" role="status"></p>
-        <p>Don't have an account? <a href="register.html">Register</a></p>
-        <a href="index.html">Back to Home</a>
-    </div>
+                <button type="submit">Login</button>
+            </form>
+
+            <p id="login-message" role="status"></p>
+            <p>Don't have an account? <a href="register.html">Register</a></p>
+            <p><a href="index.html">Back to Home</a></p>
+        </section>
+    </main>
 
     <script>
-        const password = document.getElementById("password");
-        const rememberMe = document.getElementById("remember-me");
+        const passwordInput = document.getElementById("password");
+        const toggleButton = document.getElementById("toggle-password");
 
-        document.getElementById("toggle-password").addEventListener("click", function () {
-            password.type = password.type === "password" ? "text" : "password";
-            this.textContent = password.type === "password" ? "Show" : "Hide";
+        toggleButton.addEventListener("click", () => {
+            const isHidden = passwordInput.type === "password";
+            passwordInput.type = isHidden ? "text" : "password";
+            toggleButton.textContent = isHidden ? "Hide" : "Show";
         });
 
-        document.getElementById("login-form").addEventListener("submit", function (event) {
+        document.getElementById("login-form").addEventListener("submit", event => {
             event.preventDefault();
-            if (!this.reportValidity()) return;
 
             document.getElementById("login-message").textContent =
-                rememberMe.checked
-                ? "Remember me selected. Demo login only."
-                : "Demo login submitted. No account was authenticated.";
+                "Demo login submitted successfully. Authentication is not connected yet.";
         });
     </script>
 </body>
