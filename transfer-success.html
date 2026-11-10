@@ -4,19 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transfer Review | NOVA Bank</title>
+    <title>Transfer Confirmation | NOVA Bank</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="auth.css">
 </head>
 <body>
     <div class="login-container">
         <h1>Transfer Review</h1>
-        <p>Check your transfer details.</p>
+        <p>Verify your transfer before confirming.</p>
 
         <div id="transfer-details"></div>
-        <p class="success-message">
-            Demo only. No money has been transferred.
-        </p>
+
+        <button type="button" id="confirm-transfer">Confirm Demo Transfer</button>
+        <p id="transfer-message" role="status"></p>
 
         <a href="transfer.html">Back to Transfer</a>
         <br><br>
@@ -25,10 +25,16 @@
 
     <script>
         const details = document.getElementById("transfer-details");
-        const transfer = JSON.parse(sessionStorage.getItem("novaTransferReview") || "null");
+        const confirmButton = document.getElementById("confirm-transfer");
+        const message = document.getElementById("transfer-message");
+
+        const transfer = JSON.parse(
+            sessionStorage.getItem("novaTransferReview") || "null"
+        );
 
         if (!transfer) {
             details.textContent = "No transfer details found. Please start again.";
+            confirmButton.disabled = true;
         } else {
             const fields = [
                 ["Recipient", transfer.recipient],
@@ -45,6 +51,29 @@
                 details.appendChild(row);
             });
         }
+
+        confirmButton.addEventListener("click", function () {
+            if (!transfer) return;
+
+            const records = JSON.parse(
+                localStorage.getItem("novaDemoTransfers") || "[]"
+            );
+
+            records.push({
+                ...transfer,
+                reference: "NOVA" + Date.now(),
+                date: new Date().toISOString(),
+                status: "Demo Confirmed"
+            });
+
+            localStorage.setItem("novaDemoTransfers", JSON.stringify(records));
+            sessionStorage.removeItem("novaTransferReview");
+
+            message.textContent =
+                "Demo transfer recorded successfully. No real money was transferred.";
+
+            confirmButton.disabled = true;
+        });
     </script>
 </body>
 </html>
