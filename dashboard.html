@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <div class="login-container dashboard-container">
+        <h1>NOVA Bank</h1>
+        <p>Welcome to your banking dashboard.</p>
+
+        <section class="dashboard-balance">
+            <p>Available Balance</p>
+            <h2>₹2,50,000.00</h2>
+        </section>
+
+        <section class="dashboard-actions">
+            <a href="transfer.html">Transfer Money</a>
+            <a href="transactions.html">Transaction History</a>
+            <a href="profile.html">My Profile</a>
+        </section>
+
+        <button type="button" id="logout-button">Logout</button>
+        <p id="dashboard-message" role="status"></p>
+    </div>
+
+    <script>
+        document.getElementById("logout-button").addEventListener("click", function () {
+            window.location.href = "login.html";
+        });
+    </script>
+</body>
+</html>
