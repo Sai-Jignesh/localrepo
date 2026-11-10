@@ -13,6 +13,17 @@
         <h1>Transaction History</h1>
         <p>Your recent banking activity.</p>
 
+        <div class="transaction-summary">
+            <div>
+                <small>Total Credits</small>
+                <strong class="credit">₹45,850</strong>
+            </div>
+            <div>
+                <small>Total Debits</small>
+                <strong class="debit">₹4,750</strong>
+            </div>
+        </div>
+
         <input type="search" id="transaction-search"
                placeholder="Search transactions..." aria-label="Search transactions">
 
@@ -22,7 +33,7 @@
             <option value="debit">Debits Only</option>
         </select>
 
-        <div class="transaction-list" id="transaction-list">
+        <div class="transaction-list">
             <div class="transaction-item" data-type="credit">
                 <div><strong>Salary Credit</strong><small>10 November 2026</small></div>
                 <span class="credit">+ ₹45,000</span>
