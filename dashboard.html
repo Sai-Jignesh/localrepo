@@ -9,28 +9,43 @@
     <link rel="stylesheet" href="auth.css">
 </head>
 <body>
-    <div class="login-container dashboard-container">
-        <h1>NOVA Bank</h1>
-        <p>Welcome to your banking dashboard.</p>
+    <main class="auth-container">
+        <section class="auth-card">
+            <h1>NOVA Bank</h1>
+            <p>Welcome to your banking dashboard.</p>
 
-        <section class="dashboard-balance">
-            <p>Available Balance</p>
-            <h2>₹2,50,000.00</h2>
+            <div class="balance-card">
+                <h2>Available Balance</h2>
+                <p id="account-balance">₹2,50,000.00</p>
+                <button type="button" id="toggle-balance">Hide Balance</button>
+            </div>
+
+            <h2>Quick Actions</h2>
+            <div class="dashboard-actions">
+                <a href="transfer.html">Transfer Money</a>
+                <a href="transactions.html">Transaction History</a>
+                <a href="beneficiaries.html">Manage Beneficiaries</a>
+                <a href="profile.html">My Profile</a>
+                <a href="settings.html">Settings</a>
+            </div>
+
+            <button type="button" id="logout-button">Logout</button>
         </section>
-
-        <section class="dashboard-actions">
-            <a href="transfer.html">Transfer Money</a>
-            <a href="transactions.html">Transaction History</a>
-            <a href="beneficiaries.html">Manage Beneficiaries</a>
-            <a href="profile.html">My Profile</a>
-            <a href="settings.html">Account Settings</a>
-        </section>
-
-        <button type="button" id="logout-button">Logout</button>
-    </div>
+    </main>
 
     <script>
-        document.getElementById("logout-button").addEventListener("click", function () {
+        const balance = document.getElementById("account-balance");
+        const toggleButton = document.getElementById("toggle-balance");
+        const actualBalance = "₹2,50,000.00";
+        let balanceVisible = true;
+
+        toggleButton.addEventListener("click", () => {
+            balanceVisible = !balanceVisible;
+            balance.textContent = balanceVisible ? actualBalance : "••••••••";
+            toggleButton.textContent = balanceVisible ? "Hide Balance" : "Show Balance";
+        });
+
+        document.getElementById("logout-button").addEventListener("click", () => {
             window.location.href = "login.html";
         });
     </script>
