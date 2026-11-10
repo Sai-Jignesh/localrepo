@@ -25,10 +25,13 @@
                 <button type="button" id="toggle-password">Show</button>
             </div>
 
-            <label class="remember-option">
-                <input type="checkbox" id="remember-me">
-                Remember me
-            </label>
+            <div class="login-options">
+                <label class="remember-option">
+                    <input type="checkbox" id="remember-me">
+                    Remember me
+                </label>
+                <a href="forgot-password.html">Forgot Password?</a>
+            </div>
 
             <button type="submit">Login</button>
         </form>
@@ -40,7 +43,6 @@
 
     <script>
         const password = document.getElementById("password");
-        const email = document.getElementById("email");
         const rememberMe = document.getElementById("remember-me");
 
         document.getElementById("toggle-password").addEventListener("click", function () {
@@ -50,12 +52,10 @@
 
         document.getElementById("login-form").addEventListener("submit", function (event) {
             event.preventDefault();
-
-            const message = document.getElementById("login-message");
-
             if (!this.reportValidity()) return;
 
-            message.textContent = rememberMe.checked
+            document.getElementById("login-message").textContent =
+                rememberMe.checked
                 ? "Remember me selected. Demo login only."
                 : "Demo login submitted. No account was authenticated.";
         });

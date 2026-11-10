@@ -342,3 +342,26 @@
     width: auto;
     accent-color: #d4af37;
 }
+
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 12px 0 18px;
+}
+
+.login-options .remember-option {
+    margin: 0;
+}
+
+.login-options a {
+    color: #d4af37;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.login-options a:hover {
+    text-decoration: underline;
+}
