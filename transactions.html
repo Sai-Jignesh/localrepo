@@ -20,13 +20,13 @@
 
         <input type="search" id="transaction-search" placeholder="Search transactions..." aria-label="Search transactions">
 
-        <select id="transaction-filter" aria-label="Filter transactions">
+        <select id="transaction-filter">
             <option value="all">All Transactions</option>
             <option value="credit">Credits Only</option>
             <option value="debit">Debits Only</option>
         </select>
 
-        <select id="sort-order" aria-label="Sort transactions">
+        <select id="sort-order">
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
         </select>
@@ -35,19 +35,38 @@
 
         <div class="transaction-list" id="transaction-list">
             <div class="transaction-item" data-type="credit" data-date="2026-11-10" data-amount="45000">
-                <div><strong>Salary Credit</strong><small>10 November 2026</small></div>
+                <div>
+                    <strong>Salary Credit</strong>
+                    <small>10 November 2026</small>
+                    <small>Reference: NOVA10001</small>
+                </div>
                 <span class="credit">+ ₹45,000</span>
             </div>
+
             <div class="transaction-item" data-type="debit" data-date="2026-11-08" data-amount="-3500">
-                <div><strong>Online Shopping</strong><small>08 November 2026</small></div>
+                <div>
+                    <strong>Online Shopping</strong>
+                    <small>08 November 2026</small>
+                    <small>Reference: NOVA10002</small>
+                </div>
                 <span class="debit">- ₹3,500</span>
             </div>
+
             <div class="transaction-item" data-type="debit" data-date="2026-11-05" data-amount="-1250">
-                <div><strong>Electricity Bill</strong><small>05 November 2026</small></div>
+                <div>
+                    <strong>Electricity Bill</strong>
+                    <small>05 November 2026</small>
+                    <small>Reference: NOVA10003</small>
+                </div>
                 <span class="debit">- ₹1,250</span>
             </div>
+
             <div class="transaction-item" data-type="credit" data-date="2026-11-01" data-amount="850">
-                <div><strong>Interest Credit</strong><small>01 November 2026</small></div>
+                <div>
+                    <strong>Interest Credit</strong>
+                    <small>01 November 2026</small>
+                    <small>Reference: NOVA10004</small>
+                </div>
                 <span class="credit">+ ₹850</span>
             </div>
         </div>
@@ -84,15 +103,15 @@
         }
 
         document.getElementById("export-button").addEventListener("click", function () {
-            const rows = [["Description", "Date", "Type", "Amount"]];
+            const rows = [["Description", "Date", "Type", "Amount", "Reference"]];
 
             document.querySelectorAll(".transaction-item").forEach(item => {
-                const description = item.querySelector("strong").textContent;
                 rows.push([
-                    description,
+                    item.querySelector("strong").textContent,
                     item.dataset.date,
                     item.dataset.type,
-                    item.dataset.amount
+                    item.dataset.amount,
+                    item.querySelectorAll("small")[1].textContent.replace("Reference: ", "")
                 ]);
             });
 
@@ -100,10 +119,7 @@
                 row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(",")
             ).join("\n");
 
-            const blob = new Blob(["\uFEFF" + csv], {
-                type: "text/csv;charset=utf-8;"
-            });
-
+            const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = url;
