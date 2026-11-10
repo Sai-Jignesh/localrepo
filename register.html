@@ -43,6 +43,7 @@
             <small id="password-match-message" class="field-hint"></small>
 
             <button type="submit">Create Account</button>
+            <button type="reset" class="reset-button">Clear Form</button>
         </form>
 
         <div id="registration-success" class="success-message" role="status" hidden>
@@ -129,6 +130,18 @@
             form.reset();
             checkPasswordStrength();
             checkPasswordMatch();
+        });
+
+        form.addEventListener("reset", function () {
+            successMessage.hidden = true;
+            setTimeout(() => {
+                checkPasswordStrength();
+                checkPasswordMatch();
+                document.getElementById("toggle-password").textContent = "Show";
+                document.getElementById("toggle-confirm-password").textContent = "Show";
+                password.type = "password";
+                confirmPassword.type = "password";
+            }, 0);
         });
     </script>
 </body>

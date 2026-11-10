@@ -316,3 +316,14 @@
 .success-message[hidden] {
     display: none;
 }
+
+.reset-button {
+    margin-top: 10px;
+    background: transparent;
+    color: #d4af37;
+    border: 1px solid #d4af37;
+}
+
+.reset-button:hover {
+    background: rgba(212, 175, 55, 0.12);
+}
