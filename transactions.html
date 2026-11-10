@@ -13,41 +13,49 @@
         <h1>Transaction History</h1>
         <p>Your recent banking activity.</p>
 
-        <div class="transaction-list">
+        <input type="search" id="transaction-search"
+               placeholder="Search transactions..." aria-label="Search transactions">
+
+        <div class="transaction-list" id="transaction-list">
             <div class="transaction-item">
-                <div>
-                    <strong>Salary Credit</strong>
-                    <small>10 November 2026</small>
-                </div>
+                <div><strong>Salary Credit</strong><small>10 November 2026</small></div>
                 <span class="credit">+ ₹45,000</span>
             </div>
-
             <div class="transaction-item">
-                <div>
-                    <strong>Online Shopping</strong>
-                    <small>08 November 2026</small>
-                </div>
+                <div><strong>Online Shopping</strong><small>08 November 2026</small></div>
                 <span class="debit">- ₹3,500</span>
             </div>
-
             <div class="transaction-item">
-                <div>
-                    <strong>Electricity Bill</strong>
-                    <small>05 November 2026</small>
-                </div>
+                <div><strong>Electricity Bill</strong><small>05 November 2026</small></div>
                 <span class="debit">- ₹1,250</span>
             </div>
-
             <div class="transaction-item">
-                <div>
-                    <strong>Interest Credit</strong>
-                    <small>01 November 2026</small>
-                </div>
+                <div><strong>Interest Credit</strong><small>01 November 2026</small></div>
                 <span class="credit">+ ₹850</span>
             </div>
         </div>
 
+        <p id="no-transactions" hidden>No matching transactions found.</p>
         <a href="dashboard.html">Back to Dashboard</a>
     </div>
+
+    <script>
+        const searchInput = document.getElementById("transaction-search");
+        const transactions = document.querySelectorAll(".transaction-item");
+        const emptyMessage = document.getElementById("no-transactions");
+
+        searchInput.addEventListener("input", function () {
+            const query = this.value.toLowerCase();
+            let visibleCount = 0;
+
+            transactions.forEach(transaction => {
+                const matches = transaction.textContent.toLowerCase().includes(query);
+                transaction.hidden = !matches;
+                if (matches) visibleCount++;
+            });
+
+            emptyMessage.hidden = visibleCount !== 0;
+        });
+    </script>
 </body>
 </html>
