@@ -16,20 +16,26 @@
         <input type="search" id="transaction-search"
                placeholder="Search transactions..." aria-label="Search transactions">
 
+        <select id="transaction-filter" aria-label="Filter transactions">
+            <option value="all">All Transactions</option>
+            <option value="credit">Credits Only</option>
+            <option value="debit">Debits Only</option>
+        </select>
+
         <div class="transaction-list" id="transaction-list">
-            <div class="transaction-item">
+            <div class="transaction-item" data-type="credit">
                 <div><strong>Salary Credit</strong><small>10 November 2026</small></div>
                 <span class="credit">+ ₹45,000</span>
             </div>
-            <div class="transaction-item">
+            <div class="transaction-item" data-type="debit">
                 <div><strong>Online Shopping</strong><small>08 November 2026</small></div>
                 <span class="debit">- ₹3,500</span>
             </div>
-            <div class="transaction-item">
+            <div class="transaction-item" data-type="debit">
                 <div><strong>Electricity Bill</strong><small>05 November 2026</small></div>
                 <span class="debit">- ₹1,250</span>
             </div>
-            <div class="transaction-item">
+            <div class="transaction-item" data-type="credit">
                 <div><strong>Interest Credit</strong><small>01 November 2026</small></div>
                 <span class="credit">+ ₹850</span>
             </div>
@@ -41,21 +47,29 @@
 
     <script>
         const searchInput = document.getElementById("transaction-search");
+        const filterInput = document.getElementById("transaction-filter");
         const transactions = document.querySelectorAll(".transaction-item");
         const emptyMessage = document.getElementById("no-transactions");
 
-        searchInput.addEventListener("input", function () {
-            const query = this.value.toLowerCase();
+        function filterTransactions() {
+            const query = searchInput.value.toLowerCase();
+            const type = filterInput.value;
             let visibleCount = 0;
 
             transactions.forEach(transaction => {
-                const matches = transaction.textContent.toLowerCase().includes(query);
-                transaction.hidden = !matches;
-                if (matches) visibleCount++;
+                const matchesText = transaction.textContent.toLowerCase().includes(query);
+                const matchesType = type === "all" || transaction.dataset.type === type;
+                const visible = matchesText && matchesType;
+
+                transaction.hidden = !visible;
+                if (visible) visibleCount++;
             });
 
             emptyMessage.hidden = visibleCount !== 0;
-        });
+        }
+
+        searchInput.addEventListener("input", filterTransactions);
+        filterInput.addEventListener("change", filterTransactions);
     </script>
 </body>
 </html>
