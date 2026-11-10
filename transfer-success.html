@@ -4,21 +4,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transfer Confirmation | NOVA Bank</title>
+    <title>Transfer Review | NOVA Bank</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="auth.css">
 </head>
 <body>
     <div class="login-container">
         <h1>Transfer Review</h1>
-        <p>Your transfer details have been validated.</p>
+        <p>Check your transfer details.</p>
 
-        <div class="success-message">
-            Demo transfer request received.
-            No money has been transferred.
-        </div>
+        <div id="transfer-details"></div>
+        <p class="success-message">
+            Demo only. No money has been transferred.
+        </p>
 
+        <a href="transfer.html">Back to Transfer</a>
+        <br><br>
         <a href="dashboard.html">Back to Dashboard</a>
     </div>
+
+    <script>
+        const details = document.getElementById("transfer-details");
+        const transfer = JSON.parse(sessionStorage.getItem("novaTransferReview") || "null");
+
+        if (!transfer) {
+            details.textContent = "No transfer details found. Please start again.";
+        } else {
+            const fields = [
+                ["Recipient", transfer.recipient],
+                ["Account Number", "••••" + transfer.account.slice(-4)],
+                ["Amount", "₹" + transfer.amount.toFixed(2)],
+                ["Description", transfer.description || "Not provided"]
+            ];
+
+            fields.forEach(([label, value]) => {
+                const row = document.createElement("p");
+                const strong = document.createElement("strong");
+                strong.textContent = label + ": ";
+                row.append(strong, document.createTextNode(value));
+                details.appendChild(row);
+            });
+        }
+    </script>
 </body>
 </html>
