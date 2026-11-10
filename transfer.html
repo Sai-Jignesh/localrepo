@@ -27,6 +27,12 @@
                     step="0.01" required>
 
                 <p>Maximum demo transfer: ₹50,000</p>
+
+                <div class="transfer-fee-summary">
+                    <p>Transfer Fee: <strong id="transfer-fee">₹0.00</strong></p>
+                    <p>Total Amount: <strong id="total-amount">₹0.00</strong></p>
+                </div>
+
                 <p id="amount-message" role="status"></p>
 
                 <label for="description">Description</label>
@@ -43,7 +49,30 @@
         const form = document.getElementById("transfer-form");
         const amountInput = document.getElementById("amount");
         const amountMessage = document.getElementById("amount-message");
+        const feeDisplay = document.getElementById("transfer-fee");
+        const totalDisplay = document.getElementById("total-amount");
+
         const transferLimit = 50000;
+        const feeRate = 0.005;
+
+        const currency = value => new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR"
+        }).format(value);
+
+        function calculateFee() {
+            const amount = Number(amountInput.value);
+
+            if (!Number.isFinite(amount) || amount <= 0 || amount > transferLimit) {
+                feeDisplay.textContent = currency(0);
+                totalDisplay.textContent = currency(0);
+                return;
+            }
+
+            const fee = amount * feeRate;
+            feeDisplay.textContent = currency(fee);
+            totalDisplay.textContent = currency(amount + fee);
+        }
 
         amountInput.addEventListener("input", () => {
             const amount = Number(amountInput.value);
@@ -55,6 +84,8 @@
             } else {
                 amountMessage.textContent = "";
             }
+
+            calculateFee();
         });
 
         form.addEventListener("submit", event => {
@@ -67,18 +98,25 @@
                 return;
             }
 
-            const transfer = {
-                recipient: document.getElementById("recipient").value.trim(),
-                account: document.getElementById("account").value.trim(),
-                amount,
-                description: document.getElementById("description").value.trim(),
-                createdAt: new Date().toISOString()
-            };
+            const recipient = document.getElementById("recipient").value.trim();
+            const account = document.getElementById("account").value.trim();
 
-            if (!transfer.recipient || !/^[0-9]{8,18}$/.test(transfer.account)) {
+            if (!recipient || !/^[0-9]{8,18}$/.test(account)) {
                 amountMessage.textContent = "Enter valid recipient details.";
                 return;
             }
+
+            const fee = amount * feeRate;
+
+            const transfer = {
+                recipient,
+                account,
+                amount,
+                fee,
+                totalAmount: amount + fee,
+                description: document.getElementById("description").value.trim(),
+                createdAt: new Date().toISOString()
+            };
 
             sessionStorage.setItem("novaTransferDraft", JSON.stringify(transfer));
             window.location.href = "transfer-success.html";
