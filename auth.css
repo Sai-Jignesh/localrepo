@@ -549,3 +549,24 @@
     font-weight: 600;
 }
 
+.details-button {
+    width: auto;
+    padding: 7px 12px;
+    font-size: 12px;
+}
+
+.transaction-details {
+    margin: 20px 0;
+    padding: 16px;
+    border: 1px solid #d4af37;
+    border-radius: 10px;
+    text-align: left;
+    overflow-wrap: anywhere;
+}
+
+.transaction-details p {
+    padding: 6px 0;
+    border-bottom: 1px solid #333;
+}
+
+
