@@ -569,4 +569,45 @@
     border-bottom: 1px solid #333;
 }
 
+#transaction-search {
+    width: 100%;
+    padding: 14px 16px;
+    margin: 12px 0;
+    background: #1a1a2e;
+    color: #ffffff;
+    border: 1px solid #444;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+#transaction-search:focus {
+    outline: none;
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+}
+
+#transaction-search::placeholder {
+    color: #999;
+}
+
+#transaction-filter,
+#sort-order {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: #1a1a2e;
+    color: #ffffff;
+    border: 1px solid #444;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#transaction-filter:focus,
+#sort-order:focus {
+    outline: 2px solid #d4af37;
+    outline-offset: 2px;
+}
+
+
 
