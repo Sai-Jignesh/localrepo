@@ -35,53 +35,32 @@
 
         <div class="transaction-list" id="transaction-list">
             <div class="transaction-item" data-type="credit" data-date="2026-11-10" data-amount="45000" data-reference="NOVA10001">
-                <div>
-                    <strong>Salary Credit</strong>
-                    <small>10 November 2026</small>
-                    <small>Reference: NOVA10001</small>
-                    <span class="transaction-status completed">Completed</span>
-                </div>
-                <span class="credit">+ ₹45,000</span>
+                <div><strong>Salary Credit</strong><small>10 November 2026</small><small>Reference: NOVA10001</small><span class="transaction-status completed">Completed</span></div>
+                <span class="credit amount">45000</span>
                 <button type="button" class="details-button">Details</button>
             </div>
 
             <div class="transaction-item" data-type="debit" data-date="2026-11-08" data-amount="-3500" data-reference="NOVA10002">
-                <div>
-                    <strong>Online Shopping</strong>
-                    <small>08 November 2026</small>
-                    <small>Reference: NOVA10002</small>
-                    <span class="transaction-status completed">Completed</span>
-                </div>
-                <span class="debit">- ₹3,500</span>
+                <div><strong>Online Shopping</strong><small>08 November 2026</small><small>Reference: NOVA10002</small><span class="transaction-status completed">Completed</span></div>
+                <span class="debit amount">-3500</span>
                 <button type="button" class="details-button">Details</button>
             </div>
 
             <div class="transaction-item" data-type="debit" data-date="2026-11-05" data-amount="-1250" data-reference="NOVA10003">
-                <div>
-                    <strong>Electricity Bill</strong>
-                    <small>05 November 2026</small>
-                    <small>Reference: NOVA10003</small>
-                    <span class="transaction-status completed">Completed</span>
-                </div>
-                <span class="debit">- ₹1,250</span>
+                <div><strong>Electricity Bill</strong><small>05 November 2026</small><small>Reference: NOVA10003</small><span class="transaction-status completed">Completed</span></div>
+                <span class="debit amount">-1250</span>
                 <button type="button" class="details-button">Details</button>
             </div>
 
             <div class="transaction-item" data-type="credit" data-date="2026-11-01" data-amount="850" data-reference="NOVA10004">
-                <div>
-                    <strong>Interest Credit</strong>
-                    <small>01 November 2026</small>
-                    <small>Reference: NOVA10004</small>
-                    <span class="transaction-status completed">Completed</span>
-                </div>
-                <span class="credit">+ ₹850</span>
+                <div><strong>Interest Credit</strong><small>01 November 2026</small><small>Reference: NOVA10004</small><span class="transaction-status completed">Completed</span></div>
+                <span class="credit amount">850</span>
                 <button type="button" class="details-button">Details</button>
             </div>
         </div>
 
         <p id="no-transactions" hidden>No matching transactions found.</p>
         <div id="transaction-details" class="transaction-details" hidden></div>
-
         <a href="dashboard.html">Back to Dashboard</a>
     </div>
 
@@ -92,6 +71,20 @@
         const list = document.getElementById("transaction-list");
         const emptyMessage = document.getElementById("no-transactions");
         const detailsBox = document.getElementById("transaction-details");
+
+        function formatAmount(amount) {
+            return new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+                maximumFractionDigits: 2
+            }).format(Math.abs(amount));
+        }
+
+        document.querySelectorAll(".transaction-item").forEach(item => {
+            const amount = Number(item.dataset.amount);
+            const sign = amount >= 0 ? "+ " : "- ";
+            item.querySelector(".amount").textContent = sign + formatAmount(amount);
+        });
 
         function updateTransactions() {
             const query = searchInput.value.toLowerCase();
@@ -146,16 +139,14 @@
             const item = event.target.closest(".transaction-item");
             detailsBox.replaceChildren();
 
-            const fields = [
+            [
                 ["Transaction", item.querySelector("strong").textContent],
                 ["Date", item.dataset.date],
                 ["Reference", item.dataset.reference],
                 ["Type", item.dataset.type],
-                ["Amount", "₹" + Math.abs(Number(item.dataset.amount)).toLocaleString("en-IN")],
+                ["Amount", formatAmount(Number(item.dataset.amount))],
                 ["Status", "Completed (sample data)"]
-            ];
-
-            fields.forEach(([label, value]) => {
+            ].forEach(([label, value]) => {
                 const row = document.createElement("p");
                 row.textContent = label + ": " + value;
                 detailsBox.appendChild(row);
