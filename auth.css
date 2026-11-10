@@ -327,3 +327,18 @@
 .reset-button:hover {
     background: rgba(212, 175, 55, 0.12);
 }
+
+
+.remember-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0 18px;
+    color: #d6d6d6;
+    font-size: 14px;
+}
+
+.remember-option input {
+    width: auto;
+    accent-color: #d4af37;
+}
