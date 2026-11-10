@@ -14,18 +14,11 @@
         <p>Your recent banking activity.</p>
 
         <div class="transaction-summary">
-            <div>
-                <small>Total Credits</small>
-                <strong class="credit">₹45,850</strong>
-            </div>
-            <div>
-                <small>Total Debits</small>
-                <strong class="debit">₹4,750</strong>
-            </div>
+            <div><small>Total Credits</small><strong class="credit">₹45,850</strong></div>
+            <div><small>Total Debits</small><strong class="debit">₹4,750</strong></div>
         </div>
 
-        <input type="search" id="transaction-search"
-               placeholder="Search transactions..." aria-label="Search transactions">
+        <input type="search" id="transaction-search" placeholder="Search transactions..." aria-label="Search transactions">
 
         <select id="transaction-filter" aria-label="Filter transactions">
             <option value="all">All Transactions</option>
@@ -33,20 +26,25 @@
             <option value="debit">Debits Only</option>
         </select>
 
-        <div class="transaction-list">
-            <div class="transaction-item" data-type="credit">
+        <select id="sort-order" aria-label="Sort transactions">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+        </select>
+
+        <div class="transaction-list" id="transaction-list">
+            <div class="transaction-item" data-type="credit" data-date="2026-11-10">
                 <div><strong>Salary Credit</strong><small>10 November 2026</small></div>
                 <span class="credit">+ ₹45,000</span>
             </div>
-            <div class="transaction-item" data-type="debit">
+            <div class="transaction-item" data-type="debit" data-date="2026-11-08">
                 <div><strong>Online Shopping</strong><small>08 November 2026</small></div>
                 <span class="debit">- ₹3,500</span>
             </div>
-            <div class="transaction-item" data-type="debit">
+            <div class="transaction-item" data-type="debit" data-date="2026-11-05">
                 <div><strong>Electricity Bill</strong><small>05 November 2026</small></div>
                 <span class="debit">- ₹1,250</span>
             </div>
-            <div class="transaction-item" data-type="credit">
+            <div class="transaction-item" data-type="credit" data-date="2026-11-01">
                 <div><strong>Interest Credit</strong><small>01 November 2026</small></div>
                 <span class="credit">+ ₹850</span>
             </div>
@@ -59,28 +57,35 @@
     <script>
         const searchInput = document.getElementById("transaction-search");
         const filterInput = document.getElementById("transaction-filter");
-        const transactions = document.querySelectorAll(".transaction-item");
+        const sortInput = document.getElementById("sort-order");
+        const list = document.getElementById("transaction-list");
         const emptyMessage = document.getElementById("no-transactions");
 
-        function filterTransactions() {
+        function updateTransactions() {
             const query = searchInput.value.toLowerCase();
             const type = filterInput.value;
-            let visibleCount = 0;
+            const items = [...list.querySelectorAll(".transaction-item")];
 
-            transactions.forEach(transaction => {
-                const matchesText = transaction.textContent.toLowerCase().includes(query);
-                const matchesType = type === "all" || transaction.dataset.type === type;
-                const visible = matchesText && matchesType;
-
-                transaction.hidden = !visible;
-                if (visible) visibleCount++;
+            items.sort((a, b) => {
+                const comparison = a.dataset.date.localeCompare(b.dataset.date);
+                return sortInput.value === "newest" ? -comparison : comparison;
             });
 
-            emptyMessage.hidden = visibleCount !== 0;
+            items.forEach(item => {
+                list.appendChild(item);
+                const matchesText = item.textContent.toLowerCase().includes(query);
+                const matchesType = type === "all" || item.dataset.type === type;
+                item.hidden = !(matchesText && matchesType);
+            });
+
+            emptyMessage.hidden = items.some(item => !item.hidden);
         }
 
-        searchInput.addEventListener("input", filterTransactions);
-        filterInput.addEventListener("change", filterTransactions);
+        searchInput.addEventListener("input", updateTransactions);
+        filterInput.addEventListener("change", updateTransactions);
+        sortInput.addEventListener("change", updateTransactions);
+
+        updateTransactions();
     </script>
 </body>
 </html>
