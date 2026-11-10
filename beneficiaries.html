@@ -9,96 +9,115 @@
     <link rel="stylesheet" href="auth.css">
 </head>
 <body>
-    <div class="login-container">
-        <h1>Beneficiaries</h1>
-        <p>Manage your saved recipients.</p>
+    <main class="auth-container">
+        <section class="auth-card">
+            <h1>Manage Beneficiaries</h1>
+            <p>Add, search and manage your saved demo beneficiaries.</p>
 
-        <form id="beneficiary-form">
-            <label for="name">Beneficiary Name</label>
-            <input type="text" id="name" placeholder="Enter full name" required>
+            <form id="beneficiary-form">
+                <input type="text" id="beneficiary-name" placeholder="Beneficiary name" required>
+                <input type="text" id="beneficiary-account" placeholder="Account number" required>
+                <input type="text" id="beneficiary-bank" placeholder="Bank name" required>
+                <button type="submit">Add Beneficiary</button>
+            </form>
 
-            <label for="account">Account Number</label>
-            <input type="text" id="account" placeholder="Enter account number"
-                   pattern="[0-9]{9,18}" inputmode="numeric" required>
+            <h2>Saved Beneficiaries</h2>
+            <input type="search" id="beneficiary-search" placeholder="Search by name, account or bank">
+            <p id="beneficiary-count"></p>
+            <div id="beneficiary-list"></div>
+            <p id="message"></p>
 
-            <label for="bank">Bank Name</label>
-            <input type="text" id="bank" placeholder="Enter bank name" required>
-
-            <button type="submit">Add Beneficiary</button>
-        </form>
-
-        <h2>Saved Beneficiaries</h2>
-        <div id="beneficiary-list"></div>
-        <p id="empty-message">No beneficiaries added yet.</p>
-        <p id="status-message" role="status"></p>
-
-        <a href="dashboard.html">Back to Dashboard</a>
-    </div>
+            <p><a href="dashboard.html">Back to Dashboard</a></p>
+        </section>
+    </main>
 
     <script>
         const form = document.getElementById("beneficiary-form");
         const list = document.getElementById("beneficiary-list");
-        const emptyMessage = document.getElementById("empty-message");
-        const statusMessage = document.getElementById("status-message");
+        const search = document.getElementById("beneficiary-search");
+        const count = document.getElementById("beneficiary-count");
+        const message = document.getElementById("message");
 
-        let beneficiaries = JSON.parse(localStorage.getItem("novaBeneficiaries") || "[]");
+        let beneficiaries = JSON.parse(localStorage.getItem("novaBeneficiaries")) || [];
+
+        function saveBeneficiaries() {
+            localStorage.setItem("novaBeneficiaries", JSON.stringify(beneficiaries));
+        }
 
         function renderBeneficiaries() {
-            list.replaceChildren();
-            emptyMessage.hidden = beneficiaries.length > 0;
+            const term = search.value.toLowerCase();
 
-            beneficiaries.forEach((person, index) => {
-                const item = document.createElement("div");
-                item.className = "beneficiary-item";
+            const filtered = beneficiaries.filter(person =>
+                person.name.toLowerCase().includes(term) ||
+                person.account.toLowerCase().includes(term) ||
+                person.bank.toLowerCase().includes(term)
+            );
 
-                const details = document.createElement("div");
-                const name = document.createElement("strong");
-                const bank = document.createElement("small");
+            count.textContent = `Showing ${filtered.length} of ${beneficiaries.length} beneficiaries`;
+            list.innerHTML = "";
 
+            if (filtered.length === 0) {
+                list.textContent = beneficiaries.length
+                    ? "No matching beneficiaries found."
+                    : "No beneficiaries added yet.";
+                return;
+            }
+
+            filtered.forEach(person => {
+                const card = document.createElement("article");
+                card.className = "beneficiary-card";
+
+                const name = document.createElement("h3");
                 name.textContent = person.name;
-                bank.textContent = person.bank + " • " + person.account;
 
-                details.append(name, bank);
+                const account = document.createElement("p");
+                account.textContent = `Account: ${person.account}`;
 
-                const removeButton = document.createElement("button");
-                removeButton.type = "button";
-                removeButton.textContent = "Remove";
+                const bank = document.createElement("p");
+                bank.textContent = `Bank: ${person.bank}`;
 
-                removeButton.addEventListener("click", () => {
-                    beneficiaries.splice(index, 1);
-                    localStorage.setItem("novaBeneficiaries", JSON.stringify(beneficiaries));
+                const remove = document.createElement("button");
+                remove.type = "button";
+                remove.textContent = "Remove";
+
+                remove.addEventListener("click", () => {
+                    beneficiaries = beneficiaries.filter(item => item.id !== person.id);
+                    saveBeneficiaries();
                     renderBeneficiaries();
+                    message.textContent = "Beneficiary removed.";
                 });
 
-                item.append(details, removeButton);
-                list.appendChild(item);
+                card.append(name, account, bank, remove);
+                list.appendChild(card);
             });
         }
 
-        form.addEventListener("submit", function(event) {
+        form.addEventListener("submit", event => {
             event.preventDefault();
 
-            if (!form.reportValidity()) return;
+            const name = document.getElementById("beneficiary-name").value.trim();
+            const account = document.getElementById("beneficiary-account").value.trim();
+            const bank = document.getElementById("beneficiary-bank").value.trim();
 
-            const account = document.getElementById("account").value;
-
-            if (beneficiaries.some(person => person.account === account)) {
-                statusMessage.textContent = "This account is already saved.";
+            if (!name || !account || !bank) {
+                message.textContent = "Please complete all fields.";
                 return;
             }
 
             beneficiaries.push({
-                name: document.getElementById("name").value.trim(),
+                id: Date.now().toString(),
+                name,
                 account,
-                bank: document.getElementById("bank").value.trim()
+                bank
             });
 
-            localStorage.setItem("novaBeneficiaries", JSON.stringify(beneficiaries));
+            saveBeneficiaries();
             form.reset();
-            statusMessage.textContent = "Beneficiary added successfully.";
+            message.textContent = "Beneficiary added successfully.";
             renderBeneficiaries();
         });
 
+        search.addEventListener("input", renderBeneficiaries);
         renderBeneficiaries();
     </script>
 </body>
