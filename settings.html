@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Account Settings</h1>
+        <p>Manage your account preferences.</p>
+
+        <form id="settings-form">
+            <label>
+                <input type="checkbox" id="email-alerts" checked>
+                Email notifications
+            </label>
+
+            <label>
+                <input type="checkbox" id="sms-alerts">
+                SMS notifications
+            </label>
+
+            <label>
+                <input type="checkbox" id="transaction-alerts" checked>
+                Transaction alerts
+            </label>
+
+            <label>
+                <input type="checkbox" id="security-alerts" checked>
+                Security alerts
+            </label>
+
+            <button type="submit">Save Preferences</button>
+        </form>
+
+        <p id="settings-message" role="status"></p>
+        <a href="dashboard.html">Back to Dashboard</a>
+    </div>
+
+    <script>
+        document.getElementById("settings-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const preferences = {
+                emailAlerts: document.getElementById("email-alerts").checked,
+                smsAlerts: document.getElementById("sms-alerts").checked,
+                transactionAlerts: document.getElementById("transaction-alerts").checked,
+                securityAlerts: document.getElementById("security-alerts").checked
+            };
+
+            localStorage.setItem("novaSettings", JSON.stringify(preferences));
+
+            document.getElementById("settings-message").textContent =
+                "Preferences saved successfully.";
+        });
+
+        const saved = JSON.parse(localStorage.getItem("novaSettings") || "null");
+
+        if (saved) {
+            document.getElementById("email-alerts").checked = saved.emailAlerts;
+            document.getElementById("sms-alerts").checked = saved.smsAlerts;
+            document.getElementById("transaction-alerts").checked = saved.transactionAlerts;
+            document.getElementById("security-alerts").checked = saved.securityAlerts;
+        }
+    </script>
+</body>
+</html>
