@@ -28,7 +28,6 @@
                 <input type="password" id="password" placeholder="Create a password" autocomplete="new-password" minlength="8" required>
                 <button type="button" id="toggle-password">Show</button>
             </div>
-
             <small class="field-hint">Password must contain at least 8 characters.</small>
 
             <div class="strength-meter">
@@ -46,6 +45,10 @@
             <button type="submit">Create Account</button>
         </form>
 
+        <div id="registration-success" class="success-message" role="status" hidden>
+            Your registration form was submitted successfully!
+        </div>
+
         <p>Already have an account? <a href="login.html">Login</a></p>
         <a href="index.html">Back to Home</a>
     </div>
@@ -56,6 +59,8 @@
         const message = document.getElementById("password-match-message");
         const strengthMessage = document.getElementById("password-strength");
         const strengthBar = document.getElementById("strength-bar");
+        const form = document.getElementById("register-form");
+        const successMessage = document.getElementById("registration-success");
 
         function checkPasswordStrength() {
             const value = password.value;
@@ -72,7 +77,6 @@
             if (!value) {
                 strengthMessage.textContent = "";
                 strengthBar.style.width = "0";
-                strengthBar.style.backgroundColor = "transparent";
             } else if (score <= 2) {
                 strengthMessage.textContent = "Password strength: Weak";
                 strengthBar.style.backgroundColor = "#e74c3c";
@@ -115,13 +119,16 @@
             this.textContent = confirmPassword.type === "password" ? "Show" : "Hide";
         });
 
-        document.getElementById("register-form").addEventListener("submit", function (event) {
+        form.addEventListener("submit", function (event) {
             event.preventDefault();
             checkPasswordMatch();
 
-            if (!this.reportValidity()) return;
+            if (!form.reportValidity()) return;
 
-            alert("Registration form submitted successfully! (Demo only)");
+            successMessage.hidden = false;
+            form.reset();
+            checkPasswordStrength();
+            checkPasswordMatch();
         });
     </script>
 </body>

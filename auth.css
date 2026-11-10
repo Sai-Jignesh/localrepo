@@ -302,3 +302,17 @@
     height: 100%;
     transition: width 0.3s ease, background-color 0.3s ease;
 }
+
+.success-message {
+    margin-top: 18px;
+    padding: 12px;
+    border: 1px solid #2ecc71;
+    border-radius: 8px;
+    color: #2ecc71;
+    text-align: center;
+    font-size: 14px;
+}
+
+.success-message[hidden] {
+    display: none;
+}
