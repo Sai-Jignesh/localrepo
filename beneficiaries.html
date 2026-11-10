@@ -25,7 +25,7 @@
             <input type="search" id="beneficiary-search" placeholder="Search by name, account or bank">
             <p id="beneficiary-count"></p>
             <div id="beneficiary-list"></div>
-            <p id="message"></p>
+            <p id="message" role="status"></p>
 
             <p><a href="dashboard.html">Back to Dashboard</a></p>
         </section>
@@ -81,10 +81,16 @@
                 remove.textContent = "Remove";
 
                 remove.addEventListener("click", () => {
+                    const confirmed = window.confirm(
+                        `Are you sure you want to remove ${person.name} from your beneficiaries?`
+                    );
+
+                    if (!confirmed) return;
+
                     beneficiaries = beneficiaries.filter(item => item.id !== person.id);
                     saveBeneficiaries();
                     renderBeneficiaries();
-                    message.textContent = "Beneficiary removed.";
+                    message.textContent = "Beneficiary removed successfully.";
                 });
 
                 card.append(name, account, bank, remove);
