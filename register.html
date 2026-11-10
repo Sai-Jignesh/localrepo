@@ -35,7 +35,9 @@
                        minlength="8" required>
                 <button type="button" id="toggle-password">Show</button>
             </div>
+
             <small class="field-hint">Password must contain at least 8 characters.</small>
+            <small id="password-strength" class="field-hint"></small>
 
             <label for="confirm-password">Confirm Password</label>
             <div class="password-field">
@@ -57,6 +59,28 @@
         const password = document.getElementById("password");
         const confirmPassword = document.getElementById("confirm-password");
         const message = document.getElementById("password-match-message");
+        const strengthMessage = document.getElementById("password-strength");
+
+        function checkPasswordStrength() {
+            const value = password.value;
+            let score = 0;
+
+            if (value.length >= 8) score++;
+            if (/[A-Z]/.test(value)) score++;
+            if (/[a-z]/.test(value)) score++;
+            if (/[0-9]/.test(value)) score++;
+            if (/[^A-Za-z0-9]/.test(value)) score++;
+
+            if (!value) {
+                strengthMessage.textContent = "";
+            } else if (score <= 2) {
+                strengthMessage.textContent = "Password strength: Weak";
+            } else if (score <= 4) {
+                strengthMessage.textContent = "Password strength: Medium";
+            } else {
+                strengthMessage.textContent = "Password strength: Strong";
+            }
+        }
 
         function checkPasswordMatch() {
             if (!confirmPassword.value) {
@@ -71,7 +95,11 @@
             }
         }
 
-        password.addEventListener("input", checkPasswordMatch);
+        password.addEventListener("input", () => {
+            checkPasswordStrength();
+            checkPasswordMatch();
+        });
+
         confirmPassword.addEventListener("input", checkPasswordMatch);
 
         document.getElementById("toggle-password").addEventListener("click", function () {
