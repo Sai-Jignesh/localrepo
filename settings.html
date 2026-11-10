@@ -4,68 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Settings | NOVA Bank</title>
+    <title>Settings | NOVA Bank</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="auth.css">
 </head>
 <body>
-    <div class="login-container">
-        <h1>Account Settings</h1>
-        <p>Manage your account preferences.</p>
+    <main class="auth-container">
+        <section class="auth-card">
+            <h1>Account Settings</h1>
+            <p>Manage your demo notification preferences.</p>
 
-        <form id="settings-form">
-            <label>
-                <input type="checkbox" id="email-alerts" checked>
-                Email notifications
-            </label>
+            <form id="settings-form">
+                <label>
+                    <input type="checkbox" id="email-notifications">
+                    Email Notifications
+                </label>
 
-            <label>
-                <input type="checkbox" id="sms-alerts">
-                SMS notifications
-            </label>
+                <label>
+                    <input type="checkbox" id="sms-notifications">
+                    SMS Notifications
+                </label>
 
-            <label>
-                <input type="checkbox" id="transaction-alerts" checked>
-                Transaction alerts
-            </label>
+                <label>
+                    <input type="checkbox" id="transaction-alerts">
+                    Transaction Alerts
+                </label>
 
-            <label>
-                <input type="checkbox" id="security-alerts" checked>
-                Security alerts
-            </label>
+                <label>
+                    <input type="checkbox" id="promotional-alerts">
+                    Promotional Updates
+                </label>
 
-            <button type="submit">Save Preferences</button>
-        </form>
+                <button type="submit">Save Settings</button>
+                <button type="button" id="reset-settings">Reset to Defaults</button>
+            </form>
 
-        <p id="settings-message" role="status"></p>
-        <a href="dashboard.html">Back to Dashboard</a>
-    </div>
+            <p id="settings-message" role="status"></p>
+            <p><a href="dashboard.html">Back to Dashboard</a></p>
+        </section>
+    </main>
 
     <script>
-        document.getElementById("settings-form").addEventListener("submit", function(event) {
+        const form = document.getElementById("settings-form");
+        const message = document.getElementById("settings-message");
+
+        const settingIds = [
+            "email-notifications",
+            "sms-notifications",
+            "transaction-alerts",
+            "promotional-alerts"
+        ];
+
+        const defaults = {
+            "email-notifications": true,
+            "sms-notifications": false,
+            "transaction-alerts": true,
+            "promotional-alerts": false
+        };
+
+        function loadSettings() {
+            const saved = JSON.parse(localStorage.getItem("novaSettings")) || defaults;
+
+            settingIds.forEach(id => {
+                document.getElementById(id).checked = Boolean(saved[id]);
+            });
+        }
+
+        form.addEventListener("submit", event => {
             event.preventDefault();
 
-            const preferences = {
-                emailAlerts: document.getElementById("email-alerts").checked,
-                smsAlerts: document.getElementById("sms-alerts").checked,
-                transactionAlerts: document.getElementById("transaction-alerts").checked,
-                securityAlerts: document.getElementById("security-alerts").checked
-            };
+            const settings = {};
 
-            localStorage.setItem("novaSettings", JSON.stringify(preferences));
+            settingIds.forEach(id => {
+                settings[id] = document.getElementById(id).checked;
+            });
 
-            document.getElementById("settings-message").textContent =
-                "Preferences saved successfully.";
+            localStorage.setItem("novaSettings", JSON.stringify(settings));
+            message.textContent = "Settings saved successfully.";
         });
 
-        const saved = JSON.parse(localStorage.getItem("novaSettings") || "null");
+        document.getElementById("reset-settings").addEventListener("click", () => {
+            const confirmed = window.confirm(
+                "Reset all notification preferences to their default values?"
+            );
 
-        if (saved) {
-            document.getElementById("email-alerts").checked = saved.emailAlerts;
-            document.getElementById("sms-alerts").checked = saved.smsAlerts;
-            document.getElementById("transaction-alerts").checked = saved.transactionAlerts;
-            document.getElementById("security-alerts").checked = saved.securityAlerts;
-        }
+            if (!confirmed) return;
+
+            localStorage.setItem("novaSettings", JSON.stringify(defaults));
+            loadSettings();
+            message.textContent = "Settings restored to defaults.";
+        });
+
+        loadSettings();
     </script>
 </body>
 </html>
