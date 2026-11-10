@@ -18,6 +18,8 @@
             <div><small>Total Debits</small><strong class="debit">₹4,750</strong></div>
         </div>
 
+        <p id="transaction-count" aria-live="polite"></p>
+
         <input type="search" id="transaction-search" placeholder="Search transactions..." aria-label="Search transactions">
 
         <select id="transaction-filter">
@@ -71,6 +73,7 @@
         const list = document.getElementById("transaction-list");
         const emptyMessage = document.getElementById("no-transactions");
         const detailsBox = document.getElementById("transaction-details");
+        const countDisplay = document.getElementById("transaction-count");
 
         function formatAmount(amount) {
             return new Intl.NumberFormat("en-IN", {
@@ -82,8 +85,8 @@
 
         document.querySelectorAll(".transaction-item").forEach(item => {
             const amount = Number(item.dataset.amount);
-            const sign = amount >= 0 ? "+ " : "- ";
-            item.querySelector(".amount").textContent = sign + formatAmount(amount);
+            item.querySelector(".amount").textContent =
+                (amount >= 0 ? "+ " : "- ") + formatAmount(amount);
         });
 
         function updateTransactions() {
@@ -96,14 +99,18 @@
                 return sortInput.value === "newest" ? -comparison : comparison;
             });
 
+            let visibleCount = 0;
+
             items.forEach(item => {
                 list.appendChild(item);
                 const matchesText = item.textContent.toLowerCase().includes(query);
                 const matchesType = type === "all" || item.dataset.type === type;
                 item.hidden = !(matchesText && matchesType);
+                if (!item.hidden) visibleCount++;
             });
 
-            emptyMessage.hidden = items.some(item => !item.hidden);
+            countDisplay.textContent = "Showing " + visibleCount + " of " + items.length + " transactions";
+            emptyMessage.hidden = visibleCount !== 0;
         }
 
         document.getElementById("export-button").addEventListener("click", function () {
