@@ -31,20 +31,22 @@
             <option value="oldest">Oldest First</option>
         </select>
 
+        <button type="button" id="export-button">Download CSV</button>
+
         <div class="transaction-list" id="transaction-list">
-            <div class="transaction-item" data-type="credit" data-date="2026-11-10">
+            <div class="transaction-item" data-type="credit" data-date="2026-11-10" data-amount="45000">
                 <div><strong>Salary Credit</strong><small>10 November 2026</small></div>
                 <span class="credit">+ ₹45,000</span>
             </div>
-            <div class="transaction-item" data-type="debit" data-date="2026-11-08">
+            <div class="transaction-item" data-type="debit" data-date="2026-11-08" data-amount="-3500">
                 <div><strong>Online Shopping</strong><small>08 November 2026</small></div>
                 <span class="debit">- ₹3,500</span>
             </div>
-            <div class="transaction-item" data-type="debit" data-date="2026-11-05">
+            <div class="transaction-item" data-type="debit" data-date="2026-11-05" data-amount="-1250">
                 <div><strong>Electricity Bill</strong><small>05 November 2026</small></div>
                 <span class="debit">- ₹1,250</span>
             </div>
-            <div class="transaction-item" data-type="credit" data-date="2026-11-01">
+            <div class="transaction-item" data-type="credit" data-date="2026-11-01" data-amount="850">
                 <div><strong>Interest Credit</strong><small>01 November 2026</small></div>
                 <span class="credit">+ ₹850</span>
             </div>
@@ -80,6 +82,35 @@
 
             emptyMessage.hidden = items.some(item => !item.hidden);
         }
+
+        document.getElementById("export-button").addEventListener("click", function () {
+            const rows = [["Description", "Date", "Type", "Amount"]];
+
+            document.querySelectorAll(".transaction-item").forEach(item => {
+                const description = item.querySelector("strong").textContent;
+                rows.push([
+                    description,
+                    item.dataset.date,
+                    item.dataset.type,
+                    item.dataset.amount
+                ]);
+            });
+
+            const csv = rows.map(row =>
+                row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(",")
+            ).join("\n");
+
+            const blob = new Blob(["\uFEFF" + csv], {
+                type: "text/csv;charset=utf-8;"
+            });
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "nova-bank-transactions.csv";
+            link.click();
+            URL.revokeObjectURL(url);
+        });
 
         searchInput.addEventListener("input", updateTransactions);
         filterInput.addEventListener("change", updateTransactions);
