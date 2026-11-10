@@ -9,162 +9,138 @@
     <link rel="stylesheet" href="auth.css">
 </head>
 <body>
-    <div class="login-container dashboard-container">
-        <h1>Transaction History</h1>
-        <p>Your recent banking activity.</p>
+    <main class="auth-container">
+        <section class="auth-card">
+            <h1>Transaction History</h1>
+            <p>Search and manage your recent demo transactions.</p>
 
-        <div class="transaction-summary">
-            <div><small>Total Credits</small><strong class="credit">₹45,850</strong></div>
-            <div><small>Total Debits</small><strong class="debit">₹4,750</strong></div>
-        </div>
-
-        <p id="transaction-count" aria-live="polite"></p>
-
-        <input type="search" id="transaction-search" placeholder="Search transactions..." aria-label="Search transactions">
-
-        <select id="transaction-filter">
-            <option value="all">All Transactions</option>
-            <option value="credit">Credits Only</option>
-            <option value="debit">Debits Only</option>
-        </select>
-
-        <select id="sort-order">
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
-        </select>
-
-        <button type="button" id="export-button">Download CSV</button>
-
-        <div class="transaction-list" id="transaction-list">
-            <div class="transaction-item" data-type="credit" data-date="2026-11-10" data-amount="45000" data-reference="NOVA10001">
-                <div><strong>Salary Credit</strong><small>10 November 2026</small><small>Reference: NOVA10001</small><span class="transaction-status completed">Completed</span></div>
-                <span class="credit amount">45000</span>
-                <button type="button" class="details-button">Details</button>
+            <div class="transaction-controls">
+                <input type="text" id="search-input" placeholder="Search transactions">
+                <select id="type-filter">
+                    <option value="all">All transactions</option>
+                    <option value="credit">Credits</option>
+                    <option value="debit">Debits</option>
+                </select>
+                <select id="sort-order">
+                    <option value="newest">Newest first</option>
+                    <option value="oldest">Oldest first</option>
+                </select>
+                <button type="button" id="clear-filters">Clear Filters</button>
             </div>
 
-            <div class="transaction-item" data-type="debit" data-date="2026-11-08" data-amount="-3500" data-reference="NOVA10002">
-                <div><strong>Online Shopping</strong><small>08 November 2026</small><small>Reference: NOVA10002</small><span class="transaction-status completed">Completed</span></div>
-                <span class="debit amount">-3500</span>
-                <button type="button" class="details-button">Details</button>
-            </div>
+            <p id="transaction-count"></p>
+            <div id="transaction-list"></div>
+            <div id="transaction-details" class="transaction-details" hidden></div>
 
-            <div class="transaction-item" data-type="debit" data-date="2026-11-05" data-amount="-1250" data-reference="NOVA10003">
-                <div><strong>Electricity Bill</strong><small>05 November 2026</small><small>Reference: NOVA10003</small><span class="transaction-status completed">Completed</span></div>
-                <span class="debit amount">-1250</span>
-                <button type="button" class="details-button">Details</button>
-            </div>
-
-            <div class="transaction-item" data-type="credit" data-date="2026-11-01" data-amount="850" data-reference="NOVA10004">
-                <div><strong>Interest Credit</strong><small>01 November 2026</small><small>Reference: NOVA10004</small><span class="transaction-status completed">Completed</span></div>
-                <span class="credit amount">850</span>
-                <button type="button" class="details-button">Details</button>
-            </div>
-        </div>
-
-        <p id="no-transactions" hidden>No matching transactions found.</p>
-        <div id="transaction-details" class="transaction-details" hidden></div>
-        <a href="dashboard.html">Back to Dashboard</a>
-    </div>
+            <button type="button" id="download-csv">Download CSV</button>
+            <p><a href="dashboard.html">Back to Dashboard</a></p>
+        </section>
+    </main>
 
     <script>
-        const searchInput = document.getElementById("transaction-search");
-        const filterInput = document.getElementById("transaction-filter");
-        const sortInput = document.getElementById("sort-order");
-        const list = document.getElementById("transaction-list");
-        const emptyMessage = document.getElementById("no-transactions");
-        const detailsBox = document.getElementById("transaction-details");
-        const countDisplay = document.getElementById("transaction-count");
+        const transactions = [
+            { date: "2026-11-10", description: "Salary Credit", category: "Income", type: "credit", amount: 75000, reference: "NOVA1001", status: "Successful" },
+            { date: "2026-11-09", description: "Grocery Shopping", category: "Shopping", type: "debit", amount: 2500, reference: "NOVA1002", status: "Successful" },
+            { date: "2026-11-08", description: "Electricity Bill", category: "Bills", type: "debit", amount: 1800, reference: "NOVA1003", status: "Successful" },
+            { date: "2026-11-07", description: "Freelance Payment", category: "Income", type: "credit", amount: 12000, reference: "NOVA1004", status: "Successful" },
+            { date: "2026-11-06", description: "Restaurant Payment", category: "Food", type: "debit", amount: 950, reference: "NOVA1005", status: "Successful" }
+        ];
 
-        function formatAmount(amount) {
-            return new Intl.NumberFormat("en-IN", {
-                style: "currency",
-                currency: "INR",
-                maximumFractionDigits: 2
-            }).format(Math.abs(amount));
-        }
+        const searchInput = document.getElementById("search-input");
+        const typeFilter = document.getElementById("type-filter");
+        const sortOrder = document.getElementById("sort-order");
+        const transactionList = document.getElementById("transaction-list");
+        const transactionCount = document.getElementById("transaction-count");
+        const details = document.getElementById("transaction-details");
 
-        document.querySelectorAll(".transaction-item").forEach(item => {
-            const amount = Number(item.dataset.amount);
-            item.querySelector(".amount").textContent =
-                (amount >= 0 ? "+ " : "- ") + formatAmount(amount);
-        });
+        const currency = amount => new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 2
+        }).format(amount);
 
         function updateTransactions() {
-            const query = searchInput.value.toLowerCase();
-            const type = filterInput.value;
-            const items = [...list.querySelectorAll(".transaction-item")];
+            const search = searchInput.value.toLowerCase();
+            const type = typeFilter.value;
 
-            items.sort((a, b) => {
-                const comparison = a.dataset.date.localeCompare(b.dataset.date);
-                return sortInput.value === "newest" ? -comparison : comparison;
+            let filtered = transactions.filter(transaction => {
+                const matchesSearch =
+                    transaction.description.toLowerCase().includes(search) ||
+                    transaction.category.toLowerCase().includes(search) ||
+                    transaction.reference.toLowerCase().includes(search);
+
+                return matchesSearch && (type === "all" || transaction.type === type);
             });
 
-            let visibleCount = 0;
+            filtered.sort((a, b) => sortOrder.value === "newest"
+                ? new Date(b.date) - new Date(a.date)
+                : new Date(a.date) - new Date(b.date));
 
-            items.forEach(item => {
-                list.appendChild(item);
-                const matchesText = item.textContent.toLowerCase().includes(query);
-                const matchesType = type === "all" || item.dataset.type === type;
-                item.hidden = !(matchesText && matchesType);
-                if (!item.hidden) visibleCount++;
+            transactionCount.textContent =
+                `Showing ${filtered.length} of ${transactions.length} transactions`;
+
+            transactionList.innerHTML = "";
+
+            if (filtered.length === 0) {
+                transactionList.textContent = "No transactions found.";
+                return;
+            }
+
+            filtered.forEach(transaction => {
+                const item = document.createElement("article");
+                item.className = "transaction-item";
+                item.innerHTML = `
+                    <h3>${transaction.description}</h3>
+                    <p>${transaction.date} | ${transaction.category}</p>
+                    <p>${transaction.type.toUpperCase()} — ${currency(transaction.amount)}</p>
+                    <p>Reference: ${transaction.reference}</p>
+                    <span class="transaction-status">${transaction.status}</span>
+                    <button type="button">View Details</button>
+                `;
+
+                item.querySelector("button").addEventListener("click", () => {
+                    details.hidden = false;
+                    details.textContent =
+                        `${transaction.description} | ${transaction.date} | ${currency(transaction.amount)} | ${transaction.reference} | ${transaction.status}`;
+                });
+
+                transactionList.appendChild(item);
             });
-
-            countDisplay.textContent = "Showing " + visibleCount + " of " + items.length + " transactions";
-            emptyMessage.hidden = visibleCount !== 0;
         }
 
-        document.getElementById("export-button").addEventListener("click", function () {
-            const rows = [["Description", "Date", "Type", "Amount", "Reference", "Status"]];
+        searchInput.addEventListener("input", updateTransactions);
+        typeFilter.addEventListener("change", updateTransactions);
+        sortOrder.addEventListener("change", updateTransactions);
 
-            document.querySelectorAll(".transaction-item").forEach(item => {
-                rows.push([
-                    item.querySelector("strong").textContent,
-                    item.dataset.date,
-                    item.dataset.type,
-                    item.dataset.amount,
-                    item.dataset.reference,
-                    "Completed"
-                ]);
-            });
+        document.getElementById("clear-filters").addEventListener("click", () => {
+            searchInput.value = "";
+            typeFilter.value = "all";
+            sortOrder.value = "newest";
+            details.hidden = true;
+            updateTransactions();
+        });
+
+        document.getElementById("download-csv").addEventListener("click", () => {
+            const rows = [
+                ["Date", "Description", "Category", "Type", "Amount", "Reference", "Status"],
+                ...transactions.map(t => [
+                    t.date, t.description, t.category, t.type, t.amount, t.reference, t.status
+                ])
+            ];
 
             const csv = rows.map(row =>
                 row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(",")
             ).join("\n");
 
-            const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = url;
-            link.download = "nova-bank-transactions.csv";
+            link.download = "nova-transactions.csv";
             link.click();
             URL.revokeObjectURL(url);
         });
 
-        list.addEventListener("click", function(event) {
-            if (!event.target.classList.contains("details-button")) return;
-
-            const item = event.target.closest(".transaction-item");
-            detailsBox.replaceChildren();
-
-            [
-                ["Transaction", item.querySelector("strong").textContent],
-                ["Date", item.dataset.date],
-                ["Reference", item.dataset.reference],
-                ["Type", item.dataset.type],
-                ["Amount", formatAmount(Number(item.dataset.amount))],
-                ["Status", "Completed (sample data)"]
-            ].forEach(([label, value]) => {
-                const row = document.createElement("p");
-                row.textContent = label + ": " + value;
-                detailsBox.appendChild(row);
-            });
-
-            detailsBox.hidden = false;
-        });
-
-        searchInput.addEventListener("input", updateTransactions);
-        filterInput.addEventListener("change", updateTransactions);
-        sortInput.addEventListener("change", updateTransactions);
         updateTransactions();
     </script>
 </body>
