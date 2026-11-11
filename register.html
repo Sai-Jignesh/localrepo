@@ -27,12 +27,18 @@
             font-size: 14px;
         }
 
-        .match-success {
-            color: #198754;
+        .match-success { color: #198754; }
+        .match-error { color: #dc3545; }
+
+        .password-field {
+            display: flex;
+            gap: 8px;
+            align-items: center;
         }
 
-        .match-error {
-            color: #dc3545;
+        .password-field input {
+            flex: 1;
+            min-width: 0;
         }
     </style>
 </head>
@@ -53,7 +59,10 @@
                 <input type="tel" id="phone" pattern="[0-9]{10}" maxlength="10" required>
 
                 <label for="password">Password</label>
-                <input type="password" id="password" required minlength="8">
+                <div class="password-field">
+                    <input type="password" id="password" required minlength="8">
+                    <button type="button" id="toggle-password">Show</button>
+                </div>
 
                 <div class="strength-track">
                     <div id="strength-bar"></div>
@@ -61,7 +70,10 @@
                 <p id="strength-text" aria-live="polite">Password strength: Not entered</p>
 
                 <label for="confirm-password">Confirm Password</label>
-                <input type="password" id="confirm-password" required>
+                <div class="password-field">
+                    <input type="password" id="confirm-password" required>
+                    <button type="button" id="toggle-confirm">Show</button>
+                </div>
                 <p id="match-message" aria-live="polite"></p>
 
                 <p id="register-message" role="status"></p>
@@ -84,9 +96,19 @@
         const registerMessage = document.getElementById("register-message");
         const form = document.getElementById("register-form");
 
+        function setupVisibility(input, button) {
+            button.addEventListener("click", () => {
+                const hidden = input.type === "password";
+                input.type = hidden ? "text" : "password";
+                button.textContent = hidden ? "Hide" : "Show";
+            });
+        }
+
+        setupVisibility(password, document.getElementById("toggle-password"));
+        setupVisibility(confirmPassword, document.getElementById("toggle-confirm"));
+
         function checkStrength(value) {
             let score = 0;
-
             if (value.length >= 8) score++;
             if (/[A-Z]/.test(value)) score++;
             if (/[a-z]/.test(value)) score++;
@@ -119,11 +141,9 @@
             }
 
             const matches = password.value === confirmPassword.value;
-
             matchMessage.textContent = matches
                 ? "Passwords match."
                 : "Passwords do not match.";
-
             matchMessage.className = matches ? "match-success" : "match-error";
             return matches;
         }
@@ -158,6 +178,8 @@
                 matchMessage.textContent = "";
                 matchMessage.className = "";
                 registerMessage.textContent = "";
+                document.getElementById("toggle-password").textContent = "Show";
+                document.getElementById("toggle-confirm").textContent = "Show";
             }, 0);
         });
     </script>
