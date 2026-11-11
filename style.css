@@ -315,3 +315,30 @@ button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
+/* NOVA Bank - Smooth Scrolling */
+
+html {
+    scroll-behavior: smooth;
+}
+
+html,
+body {
+    scroll-padding-top: 80px;
+}
+
+::selection {
+    background: #d4af37;
+    color: #111827;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
