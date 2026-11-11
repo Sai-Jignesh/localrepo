@@ -285,3 +285,33 @@ button {
 .login-container button:hover {
     background-color: #f0cf63;
 }
+/* NOVA Bank - Keyboard Accessibility */
+
+:focus-visible {
+    outline: 3px solid #d4af37;
+    outline-offset: 4px;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+    transition: outline-offset 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:focus-visible,
+a:focus-visible {
+    outline-offset: 4px;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
