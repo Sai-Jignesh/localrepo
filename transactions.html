@@ -15,28 +15,38 @@
             <p>Search and manage your recent demo transactions.</p>
 
             <div class="transaction-summary">
-                <p>Total Credits: <strong id="total-credits">₹0</strong></p>
-                <p>Total Debits: <strong id="total-debits">₹0</strong></p>
-                <p>Net Amount: <strong id="net-amount">₹0</strong></p>
+                <p>Total Credits: <strong id="total-credits"></strong></p>
+                <p>Total Debits: <strong id="total-debits"></strong></p>
+                <p>Net Amount: <strong id="net-amount"></strong></p>
             </div>
 
             <div class="transaction-controls">
-                <input type="text" id="search-input" placeholder="Search transactions">
+                <input type="search" id="search-input" placeholder="Search transactions">
+
                 <select id="type-filter">
                     <option value="all">All transactions</option>
                     <option value="credit">Credits</option>
                     <option value="debit">Debits</option>
                 </select>
+
                 <select id="sort-order">
                     <option value="newest">Newest first</option>
                     <option value="oldest">Oldest first</option>
                 </select>
+
+                <label for="start-date">From date</label>
+                <input type="date" id="start-date">
+
+                <label for="end-date">To date</label>
+                <input type="date" id="end-date">
+
                 <button type="button" id="clear-filters">Clear Filters</button>
             </div>
 
+            <p id="date-message" role="status"></p>
             <p id="transaction-count"></p>
             <div id="transaction-list"></div>
-            <div id="transaction-details" class="transaction-details" hidden></div>
+            <div id="transaction-details" hidden></div>
 
             <button type="button" id="download-csv">Download CSV</button>
             <button type="button" id="print-statement">Print Statement</button>
@@ -54,12 +64,7 @@
             { date: "2026-11-06", description: "Restaurant Payment", category: "Food", type: "debit", amount: 950, reference: "NOVA1005", status: "Successful" }
         ];
 
-        const searchInput = document.getElementById("search-input");
-        const typeFilter = document.getElementById("type-filter");
-        const sortOrder = document.getElementById("sort-order");
-        const transactionList = document.getElementById("transaction-list");
-        const transactionCount = document.getElementById("transaction-count");
-        const details = document.getElementById("transaction-details");
+        const $ = id => document.getElementById(id);
 
         const currency = amount => new Intl.NumberFormat("en-IN", {
             style: "currency",
@@ -75,14 +80,16 @@
                 .filter(t => t.type === "debit")
                 .reduce((sum, t) => sum + t.amount, 0);
 
-            document.getElementById("total-credits").textContent = currency(credits);
-            document.getElementById("total-debits").textContent = currency(debits);
-            document.getElementById("net-amount").textContent = currency(credits - debits);
+            $("total-credits").textContent = currency(credits);
+            $("total-debits").textContent = currency(debits);
+            $("net-amount").textContent = currency(credits - debits);
         }
 
         function getFilteredTransactions() {
-            const search = searchInput.value.toLowerCase();
-            const type = typeFilter.value;
+            const search = $("search-input").value.toLowerCase();
+            const type = $("type-filter").value;
+            const start = $("start-date").value;
+            const end = $("end-date").value;
 
             return transactions.filter(t => {
                 const matchesSearch =
@@ -90,22 +97,39 @@
                     t.category.toLowerCase().includes(search) ||
                     t.reference.toLowerCase().includes(search);
 
-                return matchesSearch && (type === "all" || t.type === type);
-            }).sort((a, b) => sortOrder.value === "newest"
+                const matchesType = type === "all" || t.type === type;
+                const matchesStart = !start || t.date >= start;
+                const matchesEnd = !end || t.date <= end;
+
+                return matchesSearch && matchesType && matchesStart && matchesEnd;
+            }).sort((a, b) => $("sort-order").value === "newest"
                 ? new Date(b.date) - new Date(a.date)
                 : new Date(a.date) - new Date(b.date));
         }
 
         function updateTransactions() {
-            const filtered = getFilteredTransactions();
+            const start = $("start-date").value;
+            const end = $("end-date").value;
+            const dateMessage = $("date-message");
 
-            transactionCount.textContent =
+            if (start && end && start > end) {
+                dateMessage.textContent = "The start date cannot be after the end date.";
+                $("transaction-list").textContent = "";
+                $("transaction-count").textContent = "0 transactions";
+                return;
+            }
+
+            dateMessage.textContent = "";
+
+            const filtered = getFilteredTransactions();
+            $("transaction-count").textContent =
                 `Showing ${filtered.length} of ${transactions.length} transactions`;
 
-            transactionList.innerHTML = "";
+            $("transaction-list").innerHTML = "";
+            $("transaction-details").hidden = true;
 
-            if (filtered.length === 0) {
-                transactionList.textContent = "No transactions found.";
+            if (!filtered.length) {
+                $("transaction-list").textContent = "No matching transactions found.";
                 return;
             }
 
@@ -134,29 +158,29 @@
                 button.textContent = "View Details";
 
                 button.addEventListener("click", () => {
-                    details.hidden = false;
-                    details.textContent =
+                    $("transaction-details").hidden = false;
+                    $("transaction-details").textContent =
                         `${t.description} | ${t.date} | ${currency(t.amount)} | ${t.reference} | ${t.status}`;
                 });
 
                 item.append(heading, date, amount, reference, status, button);
-                transactionList.appendChild(item);
+                $("transaction-list").appendChild(item);
             });
         }
 
-        searchInput.addEventListener("input", updateTransactions);
-        typeFilter.addEventListener("change", updateTransactions);
-        sortOrder.addEventListener("change", updateTransactions);
+        ["search-input", "type-filter", "sort-order", "start-date", "end-date"]
+            .forEach(id => $(id).addEventListener("input", updateTransactions));
 
-        document.getElementById("clear-filters").addEventListener("click", () => {
-            searchInput.value = "";
-            typeFilter.value = "all";
-            sortOrder.value = "newest";
-            details.hidden = true;
+        $("clear-filters").addEventListener("click", () => {
+            $("search-input").value = "";
+            $("type-filter").value = "all";
+            $("sort-order").value = "newest";
+            $("start-date").value = "";
+            $("end-date").value = "";
             updateTransactions();
         });
 
-        document.getElementById("download-csv").addEventListener("click", () => {
+        $("download-csv").addEventListener("click", () => {
             const rows = [
                 ["Date", "Description", "Category", "Type", "Amount", "Reference", "Status"],
                 ...getFilteredTransactions().map(t =>
@@ -168,8 +192,10 @@
                 row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(",")
             ).join("\n");
 
-            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-            const url = URL.createObjectURL(blob);
+            const url = URL.createObjectURL(
+                new Blob([csv], { type: "text/csv;charset=utf-8;" })
+            );
+
             const link = document.createElement("a");
             link.href = url;
             link.download = "nova-transactions.csv";
@@ -177,9 +203,7 @@
             URL.revokeObjectURL(url);
         });
 
-        document.getElementById("print-statement").addEventListener("click", () => {
-            window.print();
-        });
+        $("print-statement").addEventListener("click", () => window.print());
 
         updateSummary();
         updateTransactions();
