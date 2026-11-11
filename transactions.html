@@ -22,24 +22,19 @@
 
             <div class="transaction-controls">
                 <input type="search" id="search-input" placeholder="Search transactions">
-
                 <select id="type-filter">
                     <option value="all">All transactions</option>
                     <option value="credit">Credits</option>
                     <option value="debit">Debits</option>
                 </select>
-
                 <select id="sort-order">
                     <option value="newest">Newest first</option>
                     <option value="oldest">Oldest first</option>
                 </select>
-
                 <label for="start-date">From date</label>
                 <input type="date" id="start-date">
-
                 <label for="end-date">To date</label>
                 <input type="date" id="end-date">
-
                 <button type="button" id="clear-filters">Clear Filters</button>
             </div>
 
@@ -47,6 +42,7 @@
             <p id="transaction-count"></p>
             <div id="transaction-list"></div>
             <div id="transaction-details" hidden></div>
+            <p id="copy-message" role="status"></p>
 
             <button type="button" id="download-csv">Download CSV</button>
             <button type="button" id="print-statement">Print Statement</button>
@@ -72,12 +68,9 @@
         }).format(amount);
 
         function updateSummary() {
-            const credits = transactions
-                .filter(t => t.type === "credit")
+            const credits = transactions.filter(t => t.type === "credit")
                 .reduce((sum, t) => sum + t.amount, 0);
-
-            const debits = transactions
-                .filter(t => t.type === "debit")
+            const debits = transactions.filter(t => t.type === "debit")
                 .reduce((sum, t) => sum + t.amount, 0);
 
             $("total-credits").textContent = currency(credits);
@@ -97,11 +90,10 @@
                     t.category.toLowerCase().includes(search) ||
                     t.reference.toLowerCase().includes(search);
 
-                const matchesType = type === "all" || t.type === type;
-                const matchesStart = !start || t.date >= start;
-                const matchesEnd = !end || t.date <= end;
-
-                return matchesSearch && matchesType && matchesStart && matchesEnd;
+                return matchesSearch &&
+                    (type === "all" || t.type === type) &&
+                    (!start || t.date >= start) &&
+                    (!end || t.date <= end);
             }).sort((a, b) => $("sort-order").value === "newest"
                 ? new Date(b.date) - new Date(a.date)
                 : new Date(a.date) - new Date(b.date));
@@ -110,23 +102,22 @@
         function updateTransactions() {
             const start = $("start-date").value;
             const end = $("end-date").value;
-            const dateMessage = $("date-message");
 
             if (start && end && start > end) {
-                dateMessage.textContent = "The start date cannot be after the end date.";
-                $("transaction-list").textContent = "";
+                $("date-message").textContent = "The start date cannot be after the end date.";
+                $("transaction-list").innerHTML = "";
                 $("transaction-count").textContent = "0 transactions";
                 return;
             }
 
-            dateMessage.textContent = "";
+            $("date-message").textContent = "";
+            $("transaction-details").hidden = true;
 
             const filtered = getFilteredTransactions();
             $("transaction-count").textContent =
                 `Showing ${filtered.length} of ${transactions.length} transactions`;
 
             $("transaction-list").innerHTML = "";
-            $("transaction-details").hidden = true;
 
             if (!filtered.length) {
                 $("transaction-list").textContent = "No matching transactions found.";
@@ -153,17 +144,31 @@
                 status.textContent = t.status;
                 status.className = "transaction-status";
 
-                const button = document.createElement("button");
-                button.type = "button";
-                button.textContent = "View Details";
+                const copyButton = document.createElement("button");
+                copyButton.type = "button";
+                copyButton.textContent = "Copy Reference";
 
-                button.addEventListener("click", () => {
+                copyButton.addEventListener("click", async () => {
+                    try {
+                        await navigator.clipboard.writeText(t.reference);
+                        $("copy-message").textContent = `Copied ${t.reference} successfully.`;
+                    } catch {
+                        $("copy-message").textContent =
+                            "Clipboard access unavailable. Reference: " + t.reference;
+                    }
+                });
+
+                const detailsButton = document.createElement("button");
+                detailsButton.type = "button";
+                detailsButton.textContent = "View Details";
+
+                detailsButton.addEventListener("click", () => {
                     $("transaction-details").hidden = false;
                     $("transaction-details").textContent =
                         `${t.description} | ${t.date} | ${currency(t.amount)} | ${t.reference} | ${t.status}`;
                 });
 
-                item.append(heading, date, amount, reference, status, button);
+                item.append(heading, date, amount, reference, status, copyButton, detailsButton);
                 $("transaction-list").appendChild(item);
             });
         }
@@ -177,6 +182,7 @@
             $("sort-order").value = "newest";
             $("start-date").value = "";
             $("end-date").value = "";
+            $("copy-message").textContent = "";
             updateTransactions();
         });
 
