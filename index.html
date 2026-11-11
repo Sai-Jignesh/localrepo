@@ -6,57 +6,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOVA Bank | Digital Banking</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
 </head>
 <body>
-
-    <header class="navbar">
-        <h1 class="logo">NOVA<span>Bank</span></h1>
-
+    <header>
         <nav>
-            <a href="#">Home</a>
-            <a href="#">About</a>
-            <a href="#">Services</a>
-            <a href="#">Contact</a>
+            <a href="index.html" class="logo">NOVA Bank</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="login.html">Login</a>
+                <a href="register.html">Register</a>
+            </div>
         </nav>
-
-        <button class="login-btn">Login</button>
     </header>
 
     <main>
         <section class="hero">
-            <p class="tagline">WELCOME TO NOVA BANK</p>
-            <h2>Banking Made <span>Smarter.</span></h2>
-            <p class="description">
-                Experience secure, simple and smarter digital banking.
-            </p>
-            <button class="get-started">Get Started</button>
+            <h1>Banking Beyond Boundaries</h1>
+            <p>Experience a modern and convenient digital banking interface.</p>
+            <a href="login.html">Get Started</a>
         </section>
+
         <section class="features">
-    <h2>Banking That Works for You</h2>
+            <h2>Banking Made Simple</h2>
+            <div class="feature-grid">
+                <article>
+                    <h3>Easy Transfers</h3>
+                    <p>Explore a simple interface for managing demo transfers.</p>
+                </article>
+                <article>
+                    <h3>Transaction History</h3>
+                    <p>Review and organize your sample transaction records.</p>
+                </article>
+                <article>
+                    <h3>Account Management</h3>
+                    <p>Explore profile and notification settings.</p>
+                </article>
+            </div>
+        </section>
 
-    <div class="feature-container">
-        <div class="feature-card">
-            <h3>Secure Banking</h3>
-            <p>Your money and information stay protected.</p>
-        </div>
-
-        <div class="feature-card">
-            <h3>Quick Transfers</h3>
-            <p>Send money with a simple and smooth experience.</p>
-        </div>
-
-        <div class="feature-card">
-            <h3>24/7 Access</h3>
-            <p>Manage your banking whenever you need it.</p>
-        </div>
-    </div>
-</section>
-<footer class="footer">
-    <h2>NOVA Bank</h2>
-    <p>Banking made smarter, simpler and more secure.</p>
-    <p class="copyright">© 2026 NOVA Bank. All rights reserved.</p>
-</footer>
+        <section class="about">
+            <h2>Welcome to NOVA Bank</h2>
+            <p>A front-end banking demonstration built with HTML, CSS and JavaScript.</p>
+        </section>
     </main>
 
+    <footer>
+        <p>&copy; 2026 NOVA Bank. Educational demo project.</p>
+    </footer>
+
+    <button type="button" id="back-to-top" aria-label="Back to top" title="Back to top">
+        ↑
+    </button>
+
+    <script>
+        const backToTop = document.getElementById("back-to-top");
+
+        backToTop.style.display = "none";
+        backToTop.style.position = "fixed";
+        backToTop.style.right = "24px";
+        backToTop.style.bottom = "24px";
+        backToTop.style.width = "48px";
+        backToTop.style.height = "48px";
+        backToTop.style.borderRadius = "50%";
+        backToTop.style.fontSize = "24px";
+        backToTop.style.cursor = "pointer";
+        backToTop.style.zIndex = "1000";
+
+        window.addEventListener("scroll", () => {
+            backToTop.style.display = window.scrollY > 300 ? "block" : "none";
+        });
+
+        backToTop.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+    </script>
 </body>
 </html>
