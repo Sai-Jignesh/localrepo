@@ -7,64 +7,73 @@
     <title>Register | NOVA Bank</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="auth.css">
+    <style>
+        .strength-track {
+            height: 8px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        #strength-bar {
+            width: 0;
+            height: 100%;
+            transition: width 0.25s ease;
+            background: #dc3545;
+        }
+
+        #strength-text {
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
-    <div class="login-container">
-        <h1>Create Account</h1>
-        <p>Join NOVA Bank today.</p>
+    <main class="auth-container">
+        <section class="auth-card">
+            <h1>Create Your Account</h1>
+            <p>Register for a NOVA Bank demo account.</p>
 
-        <form id="register-form">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" placeholder="Enter your full name" autocomplete="name" required>
+            <form id="register-form">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" required minlength="2">
 
-            <label for="email">Email Address</label>
-            <input type="email" id="email" placeholder="Enter your email" autocomplete="email" required>
+                <label for="email">Email Address</label>
+                <input type="email" id="email" required>
 
-            <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" placeholder="Enter 10-digit number" autocomplete="tel" pattern="[0-9]{10}" required>
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" pattern="[0-9]{10}" maxlength="10" required>
 
-            <label for="password">Password</label>
-            <div class="password-field">
-                <input type="password" id="password" placeholder="Create a password" autocomplete="new-password" minlength="8" required>
-                <button type="button" id="toggle-password">Show</button>
-            </div>
-            <small class="field-hint">Password must contain at least 8 characters.</small>
+                <label for="password">Password</label>
+                <input type="password" id="password" required minlength="8">
 
-            <div class="strength-meter">
-                <div id="strength-bar"></div>
-            </div>
-            <small id="password-strength" class="field-hint"></small>
+                <div class="strength-track">
+                    <div id="strength-bar"></div>
+                </div>
+                <p id="strength-text" aria-live="polite">Password strength: Not entered</p>
 
-            <label for="confirm-password">Confirm Password</label>
-            <div class="password-field">
-                <input type="password" id="confirm-password" placeholder="Confirm your password" autocomplete="new-password" required>
-                <button type="button" id="toggle-confirm-password">Show</button>
-            </div>
-            <small id="password-match-message" class="field-hint"></small>
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" required>
 
-            <button type="submit">Create Account</button>
-            <button type="reset" class="reset-button">Clear Form</button>
-        </form>
+                <p id="register-message" role="status"></p>
 
-        <div id="registration-success" class="success-message" role="status" hidden>
-            Your registration form was submitted successfully!
-        </div>
+                <button type="submit">Create Account</button>
+                <button type="reset">Clear Form</button>
+            </form>
 
-        <p>Already have an account? <a href="login.html">Login</a></p>
-        <a href="index.html">Back to Home</a>
-    </div>
+            <p>Already registered? <a href="login.html">Login</a></p>
+            <p><a href="index.html">Back to Home</a></p>
+        </section>
+    </main>
 
     <script>
         const password = document.getElementById("password");
         const confirmPassword = document.getElementById("confirm-password");
-        const message = document.getElementById("password-match-message");
-        const strengthMessage = document.getElementById("password-strength");
         const strengthBar = document.getElementById("strength-bar");
-        const form = document.getElementById("register-form");
-        const successMessage = document.getElementById("registration-success");
+        const strengthText = document.getElementById("strength-text");
+        const message = document.getElementById("register-message");
 
-        function checkPasswordStrength() {
-            const value = password.value;
+        function checkStrength(value) {
             let score = 0;
 
             if (value.length >= 8) score++;
@@ -73,74 +82,47 @@
             if (/[0-9]/.test(value)) score++;
             if (/[^A-Za-z0-9]/.test(value)) score++;
 
-            strengthBar.style.width = (score * 20) + "%";
+            const levels = [
+                { label: "Very Weak", width: "10%", color: "#dc3545" },
+                { label: "Weak", width: "25%", color: "#dc3545" },
+                { label: "Fair", width: "45%", color: "#fd7e14" },
+                { label: "Good", width: "65%", color: "#ffc107" },
+                { label: "Strong", width: "85%", color: "#28a745" },
+                { label: "Very Strong", width: "100%", color: "#198754" }
+            ];
 
-            if (!value) {
-                strengthMessage.textContent = "";
-                strengthBar.style.width = "0";
-            } else if (score <= 2) {
-                strengthMessage.textContent = "Password strength: Weak";
-                strengthBar.style.backgroundColor = "#e74c3c";
-            } else if (score <= 4) {
-                strengthMessage.textContent = "Password strength: Medium";
-                strengthBar.style.backgroundColor = "#f1c40f";
-            } else {
-                strengthMessage.textContent = "Password strength: Strong";
-                strengthBar.style.backgroundColor = "#2ecc71";
-            }
+            const result = value.length === 0
+                ? { label: "Not entered", width: "0%", color: "transparent" }
+                : levels[score];
+
+            strengthBar.style.width = result.width;
+            strengthBar.style.background = result.color;
+            strengthText.textContent = "Password strength: " + result.label;
         }
 
-        function checkPasswordMatch() {
-            if (!confirmPassword.value) {
-                message.textContent = "";
-                confirmPassword.setCustomValidity("");
-            } else if (password.value === confirmPassword.value) {
-                message.textContent = "Passwords match.";
-                confirmPassword.setCustomValidity("");
-            } else {
-                message.textContent = "Passwords do not match.";
-                confirmPassword.setCustomValidity("Passwords do not match.");
-            }
-        }
+        password.addEventListener("input", () => checkStrength(password.value));
 
-        password.addEventListener("input", () => {
-            checkPasswordStrength();
-            checkPasswordMatch();
-        });
-
-        confirmPassword.addEventListener("input", checkPasswordMatch);
-
-        document.getElementById("toggle-password").addEventListener("click", function () {
-            password.type = password.type === "password" ? "text" : "password";
-            this.textContent = password.type === "password" ? "Show" : "Hide";
-        });
-
-        document.getElementById("toggle-confirm-password").addEventListener("click", function () {
-            confirmPassword.type = confirmPassword.type === "password" ? "text" : "password";
-            this.textContent = confirmPassword.type === "password" ? "Show" : "Hide";
-        });
-
-        form.addEventListener("submit", function (event) {
+        document.getElementById("register-form").addEventListener("submit", event => {
             event.preventDefault();
-            checkPasswordMatch();
 
-            if (!form.reportValidity()) return;
+            if (password.value !== confirmPassword.value) {
+                message.textContent = "Passwords do not match.";
+                return;
+            }
 
-            successMessage.hidden = false;
-            form.reset();
-            checkPasswordStrength();
-            checkPasswordMatch();
+            if (password.value.length < 8) {
+                message.textContent = "Password must contain at least 8 characters.";
+                return;
+            }
+
+            message.textContent =
+                "Demo registration submitted successfully. Account creation is not connected to a backend.";
         });
 
-        form.addEventListener("reset", function () {
-            successMessage.hidden = true;
+        document.getElementById("register-form").addEventListener("reset", () => {
             setTimeout(() => {
-                checkPasswordStrength();
-                checkPasswordMatch();
-                document.getElementById("toggle-password").textContent = "Show";
-                document.getElementById("toggle-confirm-password").textContent = "Show";
-                password.type = "password";
-                confirmPassword.type = "password";
+                checkStrength("");
+                message.textContent = "";
             }, 0);
         });
     </script>
