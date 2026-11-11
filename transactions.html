@@ -14,6 +14,12 @@
             <h1>Transaction History</h1>
             <p>Search and manage your recent demo transactions.</p>
 
+            <div class="transaction-summary">
+                <p>Total Credits: <strong id="total-credits">₹0</strong></p>
+                <p>Total Debits: <strong id="total-debits">₹0</strong></p>
+                <p>Net Amount: <strong id="net-amount">₹0</strong></p>
+            </div>
+
             <div class="transaction-controls">
                 <input type="text" id="search-input" placeholder="Search transactions">
                 <select id="type-filter">
@@ -57,21 +63,34 @@
 
         const currency = amount => new Intl.NumberFormat("en-IN", {
             style: "currency",
-            currency: "INR",
-            maximumFractionDigits: 2
+            currency: "INR"
         }).format(amount);
+
+        function updateSummary() {
+            const credits = transactions
+                .filter(t => t.type === "credit")
+                .reduce((sum, t) => sum + t.amount, 0);
+
+            const debits = transactions
+                .filter(t => t.type === "debit")
+                .reduce((sum, t) => sum + t.amount, 0);
+
+            document.getElementById("total-credits").textContent = currency(credits);
+            document.getElementById("total-debits").textContent = currency(debits);
+            document.getElementById("net-amount").textContent = currency(credits - debits);
+        }
 
         function getFilteredTransactions() {
             const search = searchInput.value.toLowerCase();
             const type = typeFilter.value;
 
-            return transactions.filter(transaction => {
+            return transactions.filter(t => {
                 const matchesSearch =
-                    transaction.description.toLowerCase().includes(search) ||
-                    transaction.category.toLowerCase().includes(search) ||
-                    transaction.reference.toLowerCase().includes(search);
+                    t.description.toLowerCase().includes(search) ||
+                    t.category.toLowerCase().includes(search) ||
+                    t.reference.toLowerCase().includes(search);
 
-                return matchesSearch && (type === "all" || transaction.type === type);
+                return matchesSearch && (type === "all" || t.type === type);
             }).sort((a, b) => sortOrder.value === "newest"
                 ? new Date(b.date) - new Date(a.date)
                 : new Date(a.date) - new Date(b.date));
@@ -90,25 +109,37 @@
                 return;
             }
 
-            filtered.forEach(transaction => {
+            filtered.forEach(t => {
                 const item = document.createElement("article");
                 item.className = "transaction-item";
 
-                item.innerHTML = `
-                    <h3>${transaction.description}</h3>
-                    <p>${transaction.date} | ${transaction.category}</p>
-                    <p>${transaction.type.toUpperCase()} — ${currency(transaction.amount)}</p>
-                    <p>Reference: ${transaction.reference}</p>
-                    <span class="transaction-status">${transaction.status}</span>
-                    <button type="button">View Details</button>
-                `;
+                const heading = document.createElement("h3");
+                heading.textContent = t.description;
 
-                item.querySelector("button").addEventListener("click", () => {
+                const date = document.createElement("p");
+                date.textContent = `${t.date} | ${t.category}`;
+
+                const amount = document.createElement("p");
+                amount.textContent = `${t.type.toUpperCase()} — ${currency(t.amount)}`;
+
+                const reference = document.createElement("p");
+                reference.textContent = `Reference: ${t.reference}`;
+
+                const status = document.createElement("p");
+                status.textContent = t.status;
+                status.className = "transaction-status";
+
+                const button = document.createElement("button");
+                button.type = "button";
+                button.textContent = "View Details";
+
+                button.addEventListener("click", () => {
                     details.hidden = false;
                     details.textContent =
-                        `${transaction.description} | ${transaction.date} | ${currency(transaction.amount)} | ${transaction.reference} | ${transaction.status}`;
+                        `${t.description} | ${t.date} | ${currency(t.amount)} | ${t.reference} | ${t.status}`;
                 });
 
+                item.append(heading, date, amount, reference, status, button);
                 transactionList.appendChild(item);
             });
         }
@@ -128,9 +159,9 @@
         document.getElementById("download-csv").addEventListener("click", () => {
             const rows = [
                 ["Date", "Description", "Category", "Type", "Amount", "Reference", "Status"],
-                ...getFilteredTransactions().map(t => [
-                    t.date, t.description, t.category, t.type, t.amount, t.reference, t.status
-                ])
+                ...getFilteredTransactions().map(t =>
+                    [t.date, t.description, t.category, t.type, t.amount, t.reference, t.status]
+                )
             ];
 
             const csv = rows.map(row =>
@@ -150,6 +181,7 @@
             window.print();
         });
 
+        updateSummary();
         updateTransactions();
     </script>
 </body>
