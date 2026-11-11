@@ -7,12 +7,49 @@
     <title>NOVA Bank | Digital Banking</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="auth.css">
+    <style>
+        .nav-toggle {
+            display: none;
+        }
+
+        @media (max-width: 650px) {
+            header nav {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+
+            .nav-toggle {
+                display: inline-block;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 16px;
+                padding: 16px 0;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
         <nav>
             <a href="index.html" class="logo">NOVA Bank</a>
-            <div class="nav-links">
+
+            <button type="button" class="nav-toggle"
+                id="nav-toggle" aria-expanded="false"
+                aria-controls="nav-links">
+                ☰ Menu
+            </button>
+
+            <div class="nav-links" id="nav-links">
                 <a href="index.html">Home</a>
                 <a href="login.html">Login</a>
                 <a href="register.html">Register</a>
@@ -60,6 +97,15 @@
     </button>
 
     <script>
+        const navToggle = document.getElementById("nav-toggle");
+        const navLinks = document.getElementById("nav-links");
+
+        navToggle.addEventListener("click", () => {
+            const isOpen = navLinks.classList.toggle("open");
+            navToggle.setAttribute("aria-expanded", String(isOpen));
+            navToggle.textContent = isOpen ? "✕ Close" : "☰ Menu";
+        });
+
         const backToTop = document.getElementById("back-to-top");
 
         backToTop.style.display = "none";
@@ -78,10 +124,7 @@
         });
 
         backToTop.addEventListener("click", () => {
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
+            window.scrollTo({ top: 0, behavior: "smooth" });
         });
     </script>
 </body>
