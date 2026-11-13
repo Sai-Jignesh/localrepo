@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .feedback-container {
+            max-width: 650px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #f5f6fa;
+            border-radius: 14px;
+        }
+        .feedback-container h1 {
+            text-align: center;
+            color: #101827;
+        }
+        .feedback-container p {
+            text-align: center;
+            color: #555;
+        }
+        .feedback-form label {
+            display: block;
+            margin: 18px 0 8px;
+            font-weight: bold;
+        }
+        .feedback-form input,
+        .feedback-form select,
+        .feedback-form textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            box-sizing: border-box;
+            font: inherit;
+        }
+        .feedback-form textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+        .feedback-form button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 13px;
+            background: #101827;
+            color: white;
+            border: 0;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .feedback-form button:hover {
+            background: #26364e;
+        }
+        #feedback-message {
+            margin-top: 15px;
+            text-align: center;
+            color: #167a42;
+            font-weight: bold;
+        }
+        .feedback-back {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #a17b18;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="feedback-container">
+        <h1>Share Your Feedback</h1>
+        <p>Help us improve the NOVA Bank demonstration experience.</p>
+
+        <form class="feedback-form" id="feedbackForm">
+            <label for="feedback-name">Your Name</label>
+            <input type="text" id="feedback-name" placeholder="Enter your name" required>
+
+            <label for="feedback-rating">Rate Your Experience</label>
+            <select id="feedback-rating" required>
+                <option value="">Select a rating</option>
+                <option value="5">Excellent - 5/5</option>
+                <option value="4">Very Good - 4/5</option>
+                <option value="3">Good - 3/5</option>
+                <option value="2">Fair - 2/5</option>
+                <option value="1">Poor - 1/5</option>
+            </select>
+
+            <label for="feedback-comments">Your Comments</label>
+            <textarea id="feedback-comments" maxlength="500" placeholder="Tell us about your experience..." required></textarea>
+
+            <button type="submit">Submit Feedback</button>
+        </form>
+
+        <div id="feedback-message" role="status" aria-live="polite"></div>
+        <a href="index.html" class="feedback-back">← Back to Home</a>
+    </main>
+
+    <script>
+        document.getElementById("feedbackForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const feedback = {
+                name: document.getElementById("feedback-name").value.trim(),
+                rating: document.getElementById("feedback-rating").value,
+                comments: document.getElementById("feedback-comments").value.trim(),
+                date: new Date().toLocaleString()
+            };
+
+            const savedFeedback = JSON.parse(localStorage.getItem("novaFeedback") || "[]");
+            savedFeedback.push(feedback);
+            localStorage.setItem("novaFeedback", JSON.stringify(savedFeedback));
+
+            document.getElementById("feedback-message").textContent =
+                "Thank you! Your feedback has been saved in this browser.";
+
+            this.reset();
+        });
+    </script>
+</body>
+</html>
