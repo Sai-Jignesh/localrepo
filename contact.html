@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+    <style>
+        .contact-container {
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 24px;
+        }
+
+        .contact-container form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .contact-container textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        .contact-info {
+            margin-top: 28px;
+            padding: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <main class="contact-container">
+        <section class="auth-card">
+            <h1>Contact NOVA Bank</h1>
+            <p>Send us your questions or feedback through this demo contact form.</p>
+
+            <form id="contact-form">
+                <label for="contact-name">Full Name</label>
+                <input type="text" id="contact-name" placeholder="Enter your name" required>
+
+                <label for="contact-email">Email Address</label>
+                <input type="email" id="contact-email" placeholder="Enter your email" required>
+
+                <label for="contact-subject">Subject</label>
+                <input type="text" id="contact-subject" placeholder="Enter subject" required>
+
+                <label for="contact-message">Message</label>
+                <textarea id="contact-message" placeholder="Write your message" maxlength="500" required></textarea>
+
+                <p id="character-count">0 / 500 characters</p>
+
+                <button type="submit">Submit Message</button>
+                <button type="reset">Clear Form</button>
+            </form>
+
+            <p id="contact-feedback" role="status"></p>
+
+            <div class="contact-info">
+                <h2>Support Information</h2>
+                <p>Service: NOVA Digital Banking Demo</p>
+                <p>Availability: Educational demonstration only</p>
+                <p>Note: This form does not send messages to a real support team.</p>
+            </div>
+
+            <p><a href="help.html">Visit Help & FAQ</a></p>
+            <p><a href="index.html">Back to Home</a></p>
+        </section>
+    </main>
+
+    <script>
+        const form = document.getElementById("contact-form");
+        const message = document.getElementById("contact-message");
+        const counter = document.getElementById("character-count");
+        const feedback = document.getElementById("contact-feedback");
+
+        message.addEventListener("input", () => {
+            counter.textContent = `${message.value.length} / 500 characters`;
+        });
+
+        form.addEventListener("submit", event => {
+            event.preventDefault();
+
+            feedback.textContent =
+                "Your demo message has been recorded locally. No message was sent to a real support team.";
+        });
+
+        form.addEventListener("reset", () => {
+            setTimeout(() => {
+                counter.textContent = "0 / 500 characters";
+                feedback.textContent = "";
+            }, 0);
+        });
+    </script>
+</body>
+</html>
