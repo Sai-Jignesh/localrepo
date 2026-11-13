@@ -342,3 +342,56 @@ select,
 textarea {
     font: inherit;
 }
+/* NOVA Bank - Global Footer */
+
+.nova-footer {
+    width: 100%;
+    margin-top: 50px;
+    padding: 30px 20px;
+    box-sizing: border-box;
+    background: #101827;
+    color: #ffffff;
+    text-align: center;
+    border-top: 2px solid #d4af37;
+}
+
+.nova-footer h3 {
+    color: #d4af37;
+    margin-bottom: 10px;
+}
+
+.nova-footer p {
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 8px 0;
+}
+
+.nova-footer-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 22px;
+    margin: 18px 0;
+}
+
+.nova-footer-links a {
+    color: #d4af37;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.nova-footer-links a:hover {
+    color: #ffffff;
+}
+
+.nova-footer .footer-copy {
+    font-size: 12px;
+    opacity: 0.75;
+}
+
+@media (max-width: 600px) {
+    .nova-footer-links {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
