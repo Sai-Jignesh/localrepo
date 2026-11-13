@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Savings Goal Tracker | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .savings-container {
+            max-width: 650px;
+            margin: 45px auto;
+            padding: 30px;
+            background: #f5f6fa;
+            border-radius: 14px;
+        }
+        h1 { text-align: center; color: #101827; }
+        label { display: block; margin: 17px 0 7px; font-weight: bold; }
+        input {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+        button {
+            width: 100%;
+            margin-top: 18px;
+            padding: 13px;
+            background: #101827;
+            color: white;
+            border: 0;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .goal-card {
+            margin-top: 25px;
+            padding: 22px;
+            background: white;
+            border-radius: 10px;
+        }
+        .progress-track {
+            height: 14px;
+            margin: 15px 0;
+            overflow: hidden;
+            background: #e2e5eb;
+            border-radius: 20px;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            background: #d4af37;
+            transition: width 0.3s ease;
+        }
+        .goal-back {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #a17b18;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="savings-container">
+        <h1>Savings Goal Tracker</h1>
+        <p>Set a savings target and track your progress.</p>
+
+        <form id="goalForm">
+            <label for="goalName">Savings Goal</label>
+            <input type="text" id="goalName" maxlength="50" placeholder="Example: New Laptop" required>
+
+            <label for="targetAmount">Target Amount (₹)</label>
+            <input type="number" id="targetAmount" min="1" step="0.01" required>
+
+            <label for="savedAmount">Amount Already Saved (₹)</label>
+            <input type="number" id="savedAmount" min="0" step="0.01" value="0" required>
+
+            <button type="submit">Create Savings Goal</button>
+        </form>
+
+        <section class="goal-card" id="goalCard" hidden aria-live="polite">
+            <h2 id="displayGoal"></h2>
+            <p id="displayProgress"></p>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="displayRemaining"></p>
+            <button type="button" id="clearGoal">Clear Goal</button>
+        </section>
+
+        <a href="index.html" class="goal-back">← Back to Home</a>
+    </main>
+
+    <script>
+        const formatMoney = value => new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 2
+        }).format(value);
+
+        const form = document.getElementById("goalForm");
+        const card = document.getElementById("goalCard");
+
+        function displayGoal(goal) {
+            document.getElementById("displayGoal").textContent = goal.name;
+
+            const percentage = Math.min(
+                100,
+                (goal.saved / goal.target) * 100
+            );
+
+            document.getElementById("displayProgress").textContent =
+                formatMoney(goal.saved) + " saved of " + formatMoney(goal.target) +
+                " (" + percentage.toFixed(1) + "%)";
+
+            document.getElementById("progressFill").style.width = percentage + "%";
+
+            document.getElementById("displayRemaining").textContent =
+                goal.saved >= goal.target
+                    ? "Congratulations! You reached your savings goal."
+                    : "Remaining: " + formatMoney(goal.target - goal.saved);
+
+            card.hidden = false;
+        }
+
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const goal = {
+                name: document.getElementById("goalName").value.trim(),
+                target: Number(document.getElementById("targetAmount").value),
+                saved: Number(document.getElementById("savedAmount").value)
+            };
+
+            if (!goal.name || goal.target <= 0 || goal.saved < 0) {
+                alert("Please enter valid savings details.");
+                return;
+            }
+
+            localStorage.setItem("novaSavingsGoal", JSON.stringify(goal));
+            displayGoal(goal);
+        });
+
+        document.getElementById("clearGoal").addEventListener("click", function() {
+            localStorage.removeItem("novaSavingsGoal");
+            card.hidden = true;
+            form.reset();
+        });
+
+        const savedGoal = localStorage.getItem("novaSavingsGoal");
+        if (savedGoal) {
+            try {
+                const goal = JSON.parse(savedGoal);
+                if (goal && typeof goal.name === "string" &&
+                    Number.isFinite(goal.target) && Number.isFinite(goal.saved) &&
+                    goal.target > 0 && goal.saved >= 0) {
+                    document.getElementById("goalName").value = goal.name;
+                    document.getElementById("targetAmount").value = goal.target;
+                    document.getElementById("savedAmount").value = goal.saved;
+                    displayGoal(goal);
+                }
+            } catch {
+                localStorage.removeItem("novaSavingsGoal");
+            }
+        }
+    </script>
+</body>
+</html>
