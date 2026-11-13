@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Repayment Schedule | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .schedule-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #f5f6fa;
+            border-radius: 14px;
+        }
+        h1 { text-align: center; color: #101827; }
+        label {
+            display: block;
+            margin: 16px 0 7px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 13px;
+            background: #101827;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .summary {
+            display: none;
+            margin: 25px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            line-height: 1.8;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            min-width: 650px;
+            border-collapse: collapse;
+            background: white;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: right;
+        }
+        th {
+            background: #101827;
+            color: white;
+        }
+        th:first-child, td:first-child {
+            text-align: center;
+        }
+        .back {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #a17b18;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="schedule-container">
+        <h1>Loan Repayment Schedule</h1>
+        <p>Generate an estimated month-by-month loan repayment schedule.</p>
+
+        <form id="scheduleForm">
+            <label for="principal">Loan Amount (₹)</label>
+            <input type="number" id="principal" min="1" step="0.01" required>
+
+            <label for="rate">Annual Interest Rate (%)</label>
+            <input type="number" id="rate" min="0" max="100" step="0.01" required>
+
+            <label for="years">Loan Tenure (Years)</label>
+            <input type="number" id="years" min="1" max="30" step="1" required>
+
+            <button type="submit">Generate Repayment Schedule</button>
+        </form>
+
+        <section class="summary" id="summary" aria-live="polite">
+            <h2>Loan Summary</h2>
+            <p id="emiValue"></p>
+            <p id="interestValue"></p>
+            <p id="paymentValue"></p>
+            <button type="button" id="printButton">Print Schedule</button>
+        </section>
+
+        <div class="table-wrapper">
+            <table id="scheduleTable" hidden>
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Opening Balance</th>
+                        <th>EMI</th>
+                        <th>Principal</th>
+                        <th>Interest</th>
+                        <th>Closing Balance</th>
+                    </tr>
+                </thead>
+                <tbody id="scheduleBody"></tbody>
+            </table>
+        </div>
+
+        <a href="index.html" class="back">← Back to Home</a>
+    </main>
+
+    <script>
+        const money = new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 2
+        });
+
+        document.getElementById("scheduleForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const principal = Number(document.getElementById("principal").value);
+            const annualRate = Number(document.getElementById("rate").value);
+            const years = Number(document.getElementById("years").value);
+
+            if (
+                principal <= 0 || annualRate < 0 || annualRate > 100 ||
+                years < 1 || years > 30
+            ) {
+                alert("Please enter valid loan details.");
+                return;
+            }
+
+            const months = years * 12;
+            const monthlyRate = annualRate / 1200;
+
+            const emi = monthlyRate === 0
+                ? principal / months
+                : principal * monthlyRate *
+                  Math.pow(1 + monthlyRate, months) /
+                  (Math.pow(1 + monthlyRate, months) - 1);
+
+            let balance = principal;
+            let totalInterest = 0;
+            const body = document.getElementById("scheduleBody");
+            body.replaceChildren();
+
+            for (let month = 1; month <= months; month++) {
+                const opening = balance;
+                const interest = opening * monthlyRate;
+                const payment = month === months
+                    ? opening + interest
+                    : emi;
+                const principalPaid = payment - interest;
+
+                balance = Math.max(0, opening - principalPaid);
+                totalInterest += interest;
+
+                const row = document.createElement("tr");
+
+                [
+                    month,
+                    money.format(opening),
+                    money.format(payment),
+                    money.format(principalPaid),
+                    money.format(interest),
+                    money.format(balance)
+                ].forEach(value => {
+                    const cell = document.createElement("td");
+                    cell.textContent = value;
+                    row.appendChild(cell);
+                });
+
+                body.appendChild(row);
+            }
+
+            document.getElementById("emiValue").textContent =
+                "Estimated Monthly EMI: " + money.format(emi);
+
+            document.getElementById("interestValue").textContent =
+                "Total Interest: " + money.format(totalInterest);
+
+            document.getElementById("paymentValue").textContent =
+                "Total Repayment: " + money.format(principal + totalInterest);
+
+            document.getElementById("summary").style.display = "block";
+            document.getElementById("scheduleTable").hidden = false;
+        });
+
+        document.getElementById("printButton").addEventListener("click", function() {
+            window.print();
+        });
+    </script>
+</body>
+</html>
