@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Analytics | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .analytics-container {
+            max-width: 850px;
+            margin: 45px auto;
+            padding: 30px;
+            background: #f5f6fa;
+            border-radius: 14px;
+        }
+        h1 { text-align: center; color: #101827; }
+        .analytics-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+        .summary-card {
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+        }
+        .summary-card h3 { color: #a17b18; }
+        .category-row {
+            margin: 18px 0;
+        }
+        .category-heading {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 7px;
+        }
+        .bar-track {
+            height: 13px;
+            background: #e0e3e9;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .bar-fill {
+            height: 100%;
+            background: #d4af37;
+            border-radius: 20px;
+        }
+        .analytics-back {
+            display: block;
+            margin-top: 25px;
+            text-align: center;
+            color: #a17b18;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="analytics-container">
+        <h1>Expense Analytics</h1>
+        <p style="text-align:center;">Understand how your expenses are distributed.</p>
+
+        <section class="analytics-summary">
+            <article class="summary-card">
+                <h3>Total Spending</h3>
+                <p id="totalSpending">₹0.00</p>
+            </article>
+            <article class="summary-card">
+                <h3>Total Transactions</h3>
+                <p id="totalTransactions">0</p>
+            </article>
+            <article class="summary-card">
+                <h3>Highest Category</h3>
+                <p id="highestCategory">None</p>
+            </article>
+        </section>
+
+        <h2>Category Breakdown</h2>
+        <section id="categoryBreakdown" aria-live="polite"></section>
+
+        <a href="expense-tracker.html" class="analytics-back">Open Expense Tracker</a>
+        <a href="index.html" class="analytics-back">← Back to Home</a>
+    </main>
+
+    <script>
+        const currency = new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 2
+        });
+
+        let expenses = [];
+
+        try {
+            const saved = JSON.parse(localStorage.getItem("novaExpenses") || "[]");
+            if (Array.isArray(saved)) {
+                expenses = saved.filter(item =>
+                    item &&
+                    typeof item.category === "string" &&
+                    Number.isFinite(item.amount) &&
+                    item.amount > 0
+                );
+            }
+        } catch {
+            expenses = [];
+        }
+
+        const totals = {};
+
+        expenses.forEach(expense => {
+            totals[expense.category] =
+                (totals[expense.category] || 0) + expense.amount;
+        });
+
+        const total = expenses.reduce((sum, item) => sum + item.amount, 0);
+        const categories = Object.entries(totals)
+            .sort((a, b) => b[1] - a[1]);
+
+        document.getElementById("totalSpending").textContent = currency.format(total);
+        document.getElementById("totalTransactions").textContent = expenses.length;
+        document.getElementById("highestCategory").textContent =
+            categories.length ? categories[0][0] : "None";
+
+        const breakdown = document.getElementById("categoryBreakdown");
+
+        if (categories.length === 0) {
+            const message = document.createElement("p");
+            message.textContent = "No expense data found. Add expenses using the Expense Tracker first.";
+            breakdown.appendChild(message);
+        } else {
+            categories.forEach(([category, amount]) => {
+                const percentage = (amount / total) * 100;
+
+                const row = document.createElement("div");
+                row.className = "category-row";
+
+                const heading = document.createElement("div");
+                heading.className = "category-heading";
+
+                const name = document.createElement("strong");
+                name.textContent = category;
+
+                const value = document.createElement("span");
+                value.textContent = currency.format(amount) +
+                    " (" + percentage.toFixed(1) + "%)";
+
+                heading.append(name, value);
+
+                const track = document.createElement("div");
+                track.className = "bar-track";
+
+                const fill = document.createElement("div");
+                fill.className = "bar-fill";
+                fill.style.width = percentage + "%";
+
+                track.appendChild(fill);
+                row.append(heading, track);
+                breakdown.appendChild(row);
+            });
+        }
+    </script>
+</body>
+</html>
