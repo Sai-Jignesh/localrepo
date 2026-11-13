@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Search | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .search-container {
+            max-width: 850px;
+            margin: 45px auto;
+            padding: 30px;
+            background: #f5f6fa;
+            border-radius: 14px;
+        }
+        h1 { text-align: center; color: #101827; }
+        .search-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin: 25px 0;
+        }
+        .search-controls input,
+        .search-controls select {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+        .transaction-card {
+            padding: 18px;
+            margin: 12px 0;
+            background: white;
+            border-radius: 9px;
+            border-left: 4px solid #d4af37;
+        }
+        .transaction-card p { margin: 7px 0; }
+        .search-back {
+            display: block;
+            margin-top: 22px;
+            text-align: center;
+            color: #a17b18;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="search-container">
+        <h1>Transaction Search</h1>
+        <p style="text-align:center;">Find transactions from your saved NOVA Bank demo records.</p>
+
+        <section class="search-controls">
+            <input type="search" id="searchText" placeholder="Search description or category">
+            <input type="number" id="minimumAmount" min="0" placeholder="Minimum amount">
+            <input type="number" id="maximumAmount" min="0" placeholder="Maximum amount">
+            <input type="date" id="fromDate" aria-label="From date">
+            <input type="date" id="toDate" aria-label="To date">
+        </section>
+
+        <p id="resultCount" aria-live="polite"></p>
+        <section id="transactionResults"></section>
+
+        <a href="transactions.html" class="search-back">Open Transaction History</a>
+        <a href="index.html" class="search-back">← Back to Home</a>
+    </main>
+
+    <script>
+        const money = new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 2
+        });
+
+        let transactions = [];
+
+        try {
+            const saved = JSON.parse(localStorage.getItem("novaTransactions") || "[]");
+            if (Array.isArray(saved)) {
+                transactions = saved.filter(item =>
+                    item &&
+                    typeof item === "object" &&
+                    Number.isFinite(Number(item.amount)) &&
+                    Number(item.amount) >= 0
+                );
+            }
+        } catch {
+            transactions = [];
+        }
+
+        const fields = [
+            "searchText",
+            "minimumAmount",
+            "maximumAmount",
+            "fromDate",
+            "toDate"
+        ];
+
+        function renderResults() {
+            const query = document.getElementById("searchText").value.trim().toLowerCase();
+            const minInput = document.getElementById("minimumAmount").value;
+            const maxInput = document.getElementById("maximumAmount").value;
+            const from = document.getElementById("fromDate").value;
+            const to = document.getElementById("toDate").value;
+
+            const min = minInput === "" ? 0 : Number(minInput);
+            const max = maxInput === "" ? Infinity : Number(maxInput);
+
+            const results = transactions.filter(item => {
+                const description = String(item.description || item.title || "").toLowerCase();
+                const category = String(item.category || "").toLowerCase();
+                const amount = Number(item.amount);
+                const date = String(item.date || "").slice(0, 10);
+
+                return (
+                    (!query || description.includes(query) || category.includes(query)) &&
+                    amount >= min &&
+                    amount <= max &&
+                    (!from || date >= from) &&
+                    (!to || date <= to)
+                );
+            });
+
+            const container = document.getElementById("transactionResults");
+            container.replaceChildren();
+
+            document.getElementById("resultCount").textContent =
+                results.length + " matching transaction(s) found.";
+
+            if (minInput !== "" && (!Number.isFinite(min) || min < 0) ||
+                maxInput !== "" && (!Number.isFinite(max) || max < 0) ||
+                min > max || (from && to && from > to)) {
+                document.getElementById("resultCount").textContent =
+                    "Please check your amount range and dates.";
+                return;
+            }
+
+            if (results.length === 0) {
+                const message = document.createElement("p");
+                message.textContent = "No matching transactions found.";
+                container.appendChild(message);
+                return;
+            }
+
+            results.forEach(item => {
+                const card = document.createElement("article");
+                card.className = "transaction-card";
+
+                const description = document.createElement("strong");
+                description.textContent = item.description || item.title || "Transaction";
+
+                const amount = document.createElement("p");
+                amount.textContent = "Amount: " + money.format(Number(item.amount));
+
+                const category = document.createElement("p");
+                category.textContent = "Category: " + (item.category || "Not specified");
+
+                const date = document.createElement("p");
+                date.textContent = "Date: " + (item.date || "Not specified");
+
+                card.append(description, amount, category, date);
+                container.appendChild(card);
+            });
+        }
+
+        fields.forEach(id => {
+            document.getElementById(id).addEventListener("input", renderResults);
+        });
+
+        renderResults();
+    </script>
+</body>
+</html>
