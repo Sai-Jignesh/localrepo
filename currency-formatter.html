@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Formatter | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .formatter-container {
+            max-width: 650px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #f5f6fa;
+            border-radius: 14px;
+        }
+        h1 { text-align: center; color: #101827; }
+        label {
+            display: block;
+            margin: 18px 0 8px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 13px;
+            background: #101827;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .format-result {
+            margin-top: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            line-height: 1.9;
+            overflow-wrap: anywhere;
+        }
+        .format-result h2 { color: #a17b18; }
+        .formatter-back {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #a17b18;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="formatter-container">
+        <h1>Currency Formatter</h1>
+        <p>Format numerical amounts using different international currency styles.</p>
+
+        <form id="currencyForm">
+            <label for="amount">Enter Amount</label>
+            <input type="number" id="amount" step="0.01" required placeholder="Example: 250000">
+
+            <label for="currency">Select Currency</label>
+            <select id="currency">
+                <option value="INR">Indian Rupee (INR)</option>
+                <option value="USD">US Dollar (USD)</option>
+                <option value="EUR">Euro (EUR)</option>
+                <option value="GBP">British Pound (GBP)</option>
+                <option value="JPY">Japanese Yen (JPY)</option>
+                <option value="AED">UAE Dirham (AED)</option>
+                <option value="SGD">Singapore Dollar (SGD)</option>
+            </select>
+
+            <label for="locale">Number Formatting Style</label>
+            <select id="locale">
+                <option value="en-IN">Indian Format</option>
+                <option value="en-US">United States Format</option>
+                <option value="en-GB">United Kingdom Format</option>
+                <option value="de-DE">German Format</option>
+                <option value="ja-JP">Japanese Format</option>
+            </select>
+
+            <button type="submit">Format Currency</button>
+        </form>
+
+        <section class="format-result" id="formatResult" hidden aria-live="polite">
+            <h2>Formatted Result</h2>
+            <p id="formattedAmount"></p>
+            <button type="button" id="copyResult">Copy Result</button>
+            <p id="copyMessage"></p>
+        </section>
+
+        <a href="index.html" class="formatter-back">← Back to Home</a>
+    </main>
+
+    <script>
+        let currentResult = "";
+
+        document.getElementById("currencyForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const amount = Number(document.getElementById("amount").value);
+            const currency = document.getElementById("currency").value;
+            const locale = document.getElementById("locale").value;
+
+            if (!Number.isFinite(amount)) {
+                alert("Please enter a valid amount.");
+                return;
+            }
+
+            try {
+                currentResult = new Intl.NumberFormat(locale, {
+                    style: "currency",
+                    currency: currency
+                }).format(amount);
+
+                document.getElementById("formattedAmount").textContent = currentResult;
+                document.getElementById("formatResult").hidden = false;
+                document.getElementById("copyMessage").textContent = "";
+            } catch {
+                alert("Unable to format this currency selection.");
+            }
+        });
+
+        document.getElementById("copyResult").addEventListener("click", async function() {
+            const message = document.getElementById("copyMessage");
+
+            try {
+                await navigator.clipboard.writeText(currentResult);
+                message.textContent = "Formatted amount copied.";
+            } catch {
+                message.textContent = "Clipboard unavailable. Please copy the result manually.";
+            }
+        });
+    </script>
+</body>
+</html>
