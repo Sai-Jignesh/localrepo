@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Goal Planner | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .planner {
+            max-width: 700px;
+            margin: 45px auto;
+            padding: 30px;
+            background: #f5f6fa;
+            border-radius: 14px;
+        }
+        h1 { text-align: center; color: #101827; }
+        label {
+            display: block;
+            margin: 17px 0 7px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 13px;
+            background: #101827;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 22px;
+            background: white;
+            border-radius: 10px;
+            line-height: 1.8;
+        }
+        .result h2 { color: #a17b18; }
+        .back {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #a17b18;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="planner">
+        <h1>Financial Goal Planner</h1>
+        <p>Estimate how much you need to save every month to reach a financial target.</p>
+
+        <form id="goalForm">
+            <label for="goal">Financial Goal</label>
+            <input type="text" id="goal" maxlength="60" placeholder="Example: Buy a Car" required>
+
+            <label for="target">Target Amount (₹)</label>
+            <input type="number" id="target" min="1" step="0.01" required>
+
+            <label for="current">Current Savings (₹)</label>
+            <input type="number" id="current" min="0" step="0.01" value="0" required>
+
+            <label for="months">Time Available (Months)</label>
+            <input type="number" id="months" min="1" max="600" step="1" required>
+
+            <label for="returnRate">Expected Annual Return (%)</label>
+            <input type="number" id="returnRate" min="0" max="100" step="0.01" value="0" required>
+
+            <button type="submit">Calculate Monthly Savings</button>
+        </form>
+
+        <section class="result" id="result" aria-live="polite">
+            <h2>Goal Plan Summary</h2>
+            <p id="goalName"></p>
+            <p id="monthlySavings"></p>
+            <p id="totalContribution"></p>
+            <p id="targetSummary"></p>
+        </section>
+
+        <a href="index.html" class="back">← Back to Home</a>
+    </main>
+
+    <script>
+        const money = new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 2
+        });
+
+        document.getElementById("goalForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const goal = document.getElementById("goal").value.trim();
+            const target = Number(document.getElementById("target").value);
+            const current = Number(document.getElementById("current").value);
+            const months = Number(document.getElementById("months").value);
+            const annualRate = Number(document.getElementById("returnRate").value);
+
+            if (
+                !goal || target <= 0 || current < 0 ||
+                months < 1 || months > 600 ||
+                annualRate < 0 || annualRate > 100
+            ) {
+                alert("Please enter valid financial goal details.");
+                return;
+            }
+
+            const remaining = Math.max(0, target - current);
+            const monthlyRate = annualRate / 1200;
+
+            let monthlySavings;
+
+            if (remaining === 0) {
+                monthlySavings = 0;
+            } else if (monthlyRate === 0) {
+                monthlySavings = remaining / months;
+            } else {
+                const growth = Math.pow(1 + monthlyRate, months);
+                monthlySavings = remaining * monthlyRate / (growth - 1);
+            }
+
+            const totalContribution = monthlySavings * months;
+
+            document.getElementById("goalName").textContent =
+                "Goal: " + goal;
+
+            document.getElementById("monthlySavings").textContent =
+                "Required Monthly Savings: " + money.format(monthlySavings);
+
+            document.getElementById("totalContribution").textContent =
+                "Total Future Contributions: " + money.format(totalContribution);
+
+            document.getElementById("targetSummary").textContent =
+                remaining === 0
+                    ? "Your current savings already meet your target."
+                    : "Remaining Target: " + money.format(remaining);
+
+            document.getElementById("result").style.display = "block";
+        });
+    </script>
+</body>
+</html>
