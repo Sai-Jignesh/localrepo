@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt Generator | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .receipt-container {
+            max-width: 650px;
+            margin: 45px auto;
+            padding: 30px;
+            background: #f5f6fa;
+            border-radius: 14px;
+        }
+        .receipt-container h1 {
+            text-align: center;
+            color: #101827;
+        }
+        .receipt-form label {
+            display: block;
+            margin: 16px 0 7px;
+            font-weight: bold;
+        }
+        .receipt-form input,
+        .receipt-form select {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+        .receipt-form button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            background: #101827;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .receipt-output {
+            display: none;
+            margin-top: 25px;
+            padding: 25px;
+            background: white;
+            border: 1px dashed #a17b18;
+            border-radius: 10px;
+        }
+        .receipt-output h2 {
+            text-align: center;
+            color: #a17b18;
+        }
+        .receipt-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .receipt-line strong {
+            text-align: right;
+            overflow-wrap: anywhere;
+        }
+        .receipt-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .receipt-actions button {
+            flex: 1;
+            padding: 12px;
+            background: #101827;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .receipt-back {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #a17b18;
+            text-decoration: none;
+        }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #receiptOutput,
+            #receiptOutput * {
+                visibility: visible;
+            }
+            #receiptOutput {
+                display: block !important;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 90%;
+                border: 1px solid #999;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="receipt-container">
+        <h1>Transaction Receipt Generator</h1>
+        <p>Generate a sample receipt for a demonstration transaction.</p>
+
+        <form class="receipt-form" id="receiptForm">
+            <label for="sender">Sender Name</label>
+            <input type="text" id="sender" maxlength="60" required>
+
+            <label for="receiver">Receiver Name</label>
+            <input type="text" id="receiver" maxlength="60" required>
+
+            <label for="amount">Transaction Amount (₹)</label>
+            <input type="number" id="amount" min="0.01" step="0.01" required>
+
+            <label for="transactionType">Transaction Type</label>
+            <select id="transactionType">
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="UPI Payment">UPI Payment</option>
+                <option value="Bill Payment">Bill Payment</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <button type="submit">Generate Receipt</button>
+        </form>
+
+        <section class="receipt-output" id="receiptOutput" aria-live="polite">
+            <h2>NOVA BANK</h2>
+            <p style="text-align:center;">DEMO TRANSACTION RECEIPT</p>
+
+            <div class="receipt-line">
+                <span>Reference ID</span>
+                <strong id="receiptReference"></strong>
+            </div>
+            <div class="receipt-line">
+                <span>Date and Time</span>
+                <strong id="receiptDate"></strong>
+            </div>
+            <div class="receipt-line">
+                <span>Sender</span>
+                <strong id="receiptSender"></strong>
+            </div>
+            <div class="receipt-line">
+                <span>Receiver</span>
+                <strong id="receiptReceiver"></strong>
+            </div>
+            <div class="receipt-line">
+                <span>Transaction Type</span>
+                <strong id="receiptType"></strong>
+            </div>
+            <div class="receipt-line">
+                <span>Amount</span>
+                <strong id="receiptAmount"></strong>
+            </div>
+
+            <p style="text-align:center; margin-top:20px;">
+                This is a sample receipt generated by the NOVA Bank demo application.
+                It does not confirm an actual bank transaction.
+            </p>
+        </section>
+
+        <div class="receipt-actions">
+            <button type="button" id="printButton" hidden>Print Receipt</button>
+        </div>
+
+        <a href="index.html" class="receipt-back">← Back to Home</a>
+    </main>
+
+    <script>
+        const receiptCurrency = new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 2
+        });
+
+        document.getElementById("receiptForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const sender = document.getElementById("sender").value.trim();
+            const receiver = document.getElementById("receiver").value.trim();
+            const amount = Number(document.getElementById("amount").value);
+            const type = document.getElementById("transactionType").value;
+
+            if (!sender || !receiver || !Number.isFinite(amount) || amount <= 0) {
+                alert("Please enter valid transaction details.");
+                return;
+            }
+
+            const reference = "NOVA-" + Date.now().toString(36).toUpperCase();
+
+            document.getElementById("receiptReference").textContent = reference;
+            document.getElementById("receiptDate").textContent = new Date().toLocaleString();
+            document.getElementById("receiptSender").textContent = sender;
+            document.getElementById("receiptReceiver").textContent = receiver;
+            document.getElementById("receiptType").textContent = type;
+            document.getElementById("receiptAmount").textContent = receiptCurrency.format(amount);
+
+            document.getElementById("receiptOutput").style.display = "block";
+            document.getElementById("printButton").hidden = false;
+        });
+
+        document.getElementById("printButton").addEventListener("click", function() {
+            window.print();
+        });
+    </script>
+</body>
+</html>
