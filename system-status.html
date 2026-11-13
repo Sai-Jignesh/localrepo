@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Status | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .status-container {
+            max-width: 750px;
+            margin: 45px auto;
+            padding: 30px;
+            background: #f5f6fa;
+            border-radius: 14px;
+        }
+        .status-container h1 {
+            text-align: center;
+            color: #101827;
+        }
+        .status-intro {
+            text-align: center;
+            color: #555;
+        }
+        .overall-status {
+            margin: 25px 0;
+            padding: 20px;
+            text-align: center;
+            background: #e5f5e9;
+            color: #176b35;
+            border-radius: 10px;
+        }
+        .service-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 18px;
+            margin: 12px 0;
+            background: white;
+            border-radius: 9px;
+            border-left: 4px solid #249653;
+        }
+        .service-card h3 {
+            margin: 0;
+            color: #101827;
+        }
+        .service-card p {
+            margin-bottom: 0;
+            color: #666;
+            font-size: 13px;
+        }
+        .service-status {
+            color: #176b35;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        .status-note {
+            margin-top: 25px;
+            color: #666;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .status-back {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #a17b18;
+            text-decoration: none;
+        }
+        @media (max-width: 500px) {
+            .service-card {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="status-container">
+        <h1>System Status</h1>
+        <p class="status-intro">NOVA Bank demonstration platform service overview.</p>
+
+        <section class="overall-status">
+            <h2>All Demo Services Operational</h2>
+            <p>Sample status information for the project interface.</p>
+        </section>
+
+        <section>
+            <article class="service-card">
+                <div>
+                    <h3>Website Interface</h3>
+                    <p>Main website and navigation pages</p>
+                </div>
+                <span class="service-status">● Operational</span>
+            </article>
+
+            <article class="service-card">
+                <div>
+                    <h3>User Authentication Demo</h3>
+                    <p>Sample login and registration interfaces</p>
+                </div>
+                <span class="service-status">● Operational</span>
+            </article>
+
+            <article class="service-card">
+                <div>
+                    <h3>Transaction Demo</h3>
+                    <p>Sample transfers and transaction history</p>
+                </div>
+                <span class="service-status">● Operational</span>
+            </article>
+
+            <article class="service-card">
+                <div>
+                    <h3>Financial Calculators</h3>
+                    <p>EMI, fixed deposit and budget tools</p>
+                </div>
+                <span class="service-status">● Operational</span>
+            </article>
+        </section>
+
+        <p class="status-note">
+            Note: These are static demonstration statuses, not live monitoring results.
+            NOVA Bank is a front-end project and does not connect to real banking infrastructure.
+        </p>
+
+        <a href="index.html" class="status-back">← Back to Home</a>
+    </main>
+</body>
+</html>
