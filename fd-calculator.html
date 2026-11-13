@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixed Deposit Calculator | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .fd-container {
+            max-width: 650px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #f5f6fa;
+            border-radius: 14px;
+        }
+        .fd-container h1 {
+            text-align: center;
+            color: #101827;
+        }
+        .fd-container label {
+            display: block;
+            margin: 18px 0 8px;
+            font-weight: bold;
+        }
+        .fd-container input,
+        .fd-container select {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+        .fd-container button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            background: #101827;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .fd-result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            line-height: 1.9;
+        }
+        .fd-result h2 {
+            color: #a17b18;
+        }
+        .fd-note {
+            font-size: 13px;
+            color: #666;
+            margin-top: 18px;
+        }
+        .fd-back {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #a17b18;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="fd-container">
+        <h1>Fixed Deposit Calculator</h1>
+        <p>Estimate the maturity value of your fixed deposit.</p>
+
+        <form id="fdForm">
+            <label for="fdAmount">Deposit Amount (₹)</label>
+            <input type="number" id="fdAmount" min="1" step="1" placeholder="Example: 100000" required>
+
+            <label for="fdRate">Annual Interest Rate (%)</label>
+            <input type="number" id="fdRate" min="0" max="100" step="0.01" placeholder="Example: 7" required>
+
+            <label for="fdYears">Deposit Period (Years)</label>
+            <input type="number" id="fdYears" min="1" max="10" step="1" placeholder="Example: 3" required>
+
+            <label for="fdFrequency">Compounding Frequency</label>
+            <select id="fdFrequency">
+                <option value="1">Yearly</option>
+                <option value="2">Half-yearly</option>
+                <option value="4" selected>Quarterly</option>
+                <option value="12">Monthly</option>
+            </select>
+
+            <button type="submit">Calculate Maturity</button>
+        </form>
+
+        <section class="fd-result" id="fdResult" aria-live="polite">
+            <h2>Deposit Summary</h2>
+            <p id="fdPrincipal"></p>
+            <p id="fdInterest"></p>
+            <p id="fdMaturity"></p>
+        </section>
+
+        <p class="fd-note">This is an illustrative calculator. Actual bank returns, taxes and terms may differ.</p>
+        <a href="index.html" class="fd-back">← Back to Home</a>
+    </main>
+
+    <script>
+        const fdCurrency = new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 2
+        });
+
+        document.getElementById("fdForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const principal = Number(document.getElementById("fdAmount").value);
+            const rate = Number(document.getElementById("fdRate").value);
+            const years = Number(document.getElementById("fdYears").value);
+            const frequency = Number(document.getElementById("fdFrequency").value);
+
+            if (principal <= 0 || rate < 0 || rate > 100 || years <= 0 || years > 10) {
+                alert("Please enter valid deposit details.");
+                return;
+            }
+
+            const maturity = principal * Math.pow(
+                1 + rate / (100 * frequency),
+                frequency * years
+            );
+
+            const interest = maturity - principal;
+
+            document.getElementById("fdPrincipal").textContent =
+                "Deposit Amount: " + fdCurrency.format(principal);
+
+            document.getElementById("fdInterest").textContent =
+                "Estimated Interest: " + fdCurrency.format(interest);
+
+            document.getElementById("fdMaturity").textContent =
+                "Maturity Value: " + fdCurrency.format(maturity);
+
+            document.getElementById("fdResult").style.display = "block";
+        });
+    </script>
+</body>
+</html>
