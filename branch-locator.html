@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branch Locator | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .branch-container {
+            max-width: 750px;
+            margin: 45px auto;
+            padding: 30px;
+            background: #f5f6fa;
+            border-radius: 14px;
+        }
+        .branch-container h1 {
+            text-align: center;
+            color: #101827;
+        }
+        .branch-search {
+            display: flex;
+            gap: 10px;
+            margin: 25px 0;
+        }
+        .branch-search input {
+            flex: 1;
+            min-width: 0;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+        .branch-search button {
+            padding: 12px 18px;
+            background: #101827;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .branch-card {
+            padding: 20px;
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #d4af37;
+        }
+        .branch-card h3 {
+            color: #a17b18;
+            margin-top: 0;
+        }
+        .branch-card p {
+            line-height: 1.6;
+        }
+        .branch-status {
+            font-size: 13px;
+            color: #666;
+        }
+        .branch-back {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #a17b18;
+            text-decoration: none;
+        }
+        @media (max-width: 500px) {
+            .branch-search {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="branch-container">
+        <h1>NOVA Bank Branch Locator</h1>
+        <p style="text-align:center;">Explore sample branch locations in this demonstration.</p>
+
+        <form class="branch-search" id="branchSearch">
+            <input type="text" id="branchCity" placeholder="Search by city or location" aria-label="Search branches by city or location">
+            <button type="submit">Search</button>
+        </form>
+
+        <p id="branchCount" aria-live="polite"></p>
+        <section id="branchList"></section>
+
+        <a href="index.html" class="branch-back">← Back to Home</a>
+    </main>
+
+    <script>
+        const branches = [
+            {
+                name: "NOVA Central Branch",
+                city: "Vijayawada",
+                address: "MG Road, Vijayawada, Andhra Pradesh",
+                hours: "Monday–Friday, 9:30 AM–4:00 PM",
+                code: "NOVA001"
+            },
+            {
+                name: "NOVA City Branch",
+                city: "Hyderabad",
+                address: "Banjara Hills, Hyderabad, Telangana",
+                hours: "Monday–Friday, 9:30 AM–4:00 PM",
+                code: "NOVA002"
+            },
+            {
+                name: "NOVA Business Branch",
+                city: "Chennai",
+                address: "T. Nagar, Chennai, Tamil Nadu",
+                hours: "Monday–Friday, 9:30 AM–4:00 PM",
+                code: "NOVA003"
+            },
+            {
+                name: "NOVA Metro Branch",
+                city: "Bengaluru",
+                address: "Indiranagar, Bengaluru, Karnataka",
+                hours: "Monday–Friday, 9:30 AM–4:00 PM",
+                code: "NOVA004"
+            }
+        ];
+
+        const branchList = document.getElementById("branchList");
+        const branchCount = document.getElementById("branchCount");
+
+        function displayBranches(searchTerm = "") {
+            const query = searchTerm.trim().toLowerCase();
+
+            const filtered = branches.filter(branch =>
+                branch.name.toLowerCase().includes(query) ||
+                branch.city.toLowerCase().includes(query) ||
+                branch.address.toLowerCase().includes(query)
+            );
+
+            branchList.replaceChildren();
+            branchCount.textContent = filtered.length + " sample branch(es) found.";
+
+            if (filtered.length === 0) {
+                const message = document.createElement("p");
+                message.textContent = "No matching sample branches found.";
+                branchList.appendChild(message);
+                return;
+            }
+
+            filtered.forEach(branch => {
+                const card = document.createElement("article");
+                card.className = "branch-card";
+
+                const title = document.createElement("h3");
+                title.textContent = branch.name;
+
+                const address = document.createElement("p");
+                address.textContent = "Address: " + branch.address;
+
+                const code = document.createElement("p");
+                code.textContent = "Branch Code: " + branch.code;
+
+                const hours = document.createElement("p");
+                hours.className = "branch-status";
+                hours.textContent = "Sample Hours: " + branch.hours;
+
+                card.append(title, address, code, hours);
+                branchList.appendChild(card);
+            });
+        }
+
+        document.getElementById("branchSearch").addEventListener("submit", function(event) {
+            event.preventDefault();
+            displayBranches(document.getElementById("branchCity").value);
+        });
+
+        displayBranches();
+    </script>
+</body>
+</html>
