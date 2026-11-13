@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Savings Interest Calculator | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .calculator {
+            max-width: 650px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #f5f6fa;
+            border-radius: 14px;
+        }
+        h1 { text-align: center; color: #101827; }
+        label {
+            display: block;
+            margin: 18px 0 8px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            background: #101827;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            line-height: 1.9;
+        }
+        .result h2 { color: #a17b18; }
+        .back {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #a17b18;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="calculator">
+        <h1>Savings Interest Calculator</h1>
+        <p>Estimate the interest earned on a savings balance.</p>
+
+        <form id="savingsForm">
+            <label for="principal">Initial Deposit (₹)</label>
+            <input type="number" id="principal" min="0.01" step="0.01" required>
+
+            <label for="rate">Annual Interest Rate (%)</label>
+            <input type="number" id="rate" min="0" max="100" step="0.01" required>
+
+            <label for="years">Investment Period (Years)</label>
+            <input type="number" id="years" min="0.1" max="50" step="0.1" required>
+
+            <label for="frequency">Compounding Frequency</label>
+            <select id="frequency">
+                <option value="1">Annually</option>
+                <option value="2">Half-yearly</option>
+                <option value="4" selected>Quarterly</option>
+                <option value="12">Monthly</option>
+            </select>
+
+            <button type="submit">Calculate Interest</button>
+        </form>
+
+        <section class="result" id="result" aria-live="polite">
+            <h2>Calculation Summary</h2>
+            <p id="principalResult"></p>
+            <p id="interestResult"></p>
+            <p id="maturityResult"></p>
+        </section>
+
+        <a href="index.html" class="back">← Back to Home</a>
+    </main>
+
+    <script>
+        const money = new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 2
+        });
+
+        document.getElementById("savingsForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const principal = Number(document.getElementById("principal").value);
+            const rate = Number(document.getElementById("rate").value);
+            const years = Number(document.getElementById("years").value);
+            const frequency = Number(document.getElementById("frequency").value);
+
+            if (
+                principal <= 0 || rate < 0 || rate > 100 ||
+                years <= 0 || years > 50
+            ) {
+                alert("Please enter valid savings details.");
+                return;
+            }
+
+            const maturity = principal * Math.pow(
+                1 + rate / (100 * frequency),
+                frequency * years
+            );
+
+            const interest = maturity - principal;
+
+            document.getElementById("principalResult").textContent =
+                "Initial Deposit: " + money.format(principal);
+
+            document.getElementById("interestResult").textContent =
+                "Estimated Interest: " + money.format(interest);
+
+            document.getElementById("maturityResult").textContent =
+                "Estimated Final Balance: " + money.format(maturity);
+
+            document.getElementById("result").style.display = "block";
+        });
+    </script>
+</body>
+</html>
