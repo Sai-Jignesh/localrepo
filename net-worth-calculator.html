@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Net Worth Calculator | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .networth-container {
+            max-width: 750px;
+            margin: 45px auto;
+            padding: 30px;
+            background: #f5f6fa;
+            border-radius: 14px;
+        }
+        h1 { text-align: center; color: #101827; }
+        .networth-container label {
+            display: block;
+            margin: 16px 0 7px;
+            font-weight: bold;
+        }
+        .networth-container input {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            background: #101827;
+            color: white;
+            border: 0;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .networth-result {
+            display: none;
+            margin-top: 25px;
+            padding: 22px;
+            background: white;
+            border-radius: 10px;
+            line-height: 1.9;
+        }
+        .networth-result h2 { color: #a17b18; }
+        .networth-back {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #a17b18;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="networth-container">
+        <h1>Net Worth Calculator</h1>
+        <p>Calculate your financial position by comparing your assets and liabilities.</p>
+
+        <form id="networthForm">
+            <h2>Assets</h2>
+
+            <label for="cash">Cash and Savings (₹)</label>
+            <input type="number" id="cash" min="0" step="0.01" value="0" required>
+
+            <label for="investments">Investments (₹)</label>
+            <input type="number" id="investments" min="0" step="0.01" value="0" required>
+
+            <label for="property">Property and Real Estate (₹)</label>
+            <input type="number" id="property" min="0" step="0.01" value="0" required>
+
+            <label for="vehicles">Vehicles and Other Assets (₹)</label>
+            <input type="number" id="vehicles" min="0" step="0.01" value="0" required>
+
+            <h2>Liabilities</h2>
+
+            <label for="homeLoan">Home Loans (₹)</label>
+            <input type="number" id="homeLoan" min="0" step="0.01" value="0" required>
+
+            <label for="personalLoan">Personal Loans (₹)</label>
+            <input type="number" id="personalLoan" min="0" step="0.01" value="0" required>
+
+            <label for="otherDebt">Other Debts (₹)</label>
+            <input type="number" id="otherDebt" min="0" step="0.01" value="0" required>
+
+            <button type="submit">Calculate Net Worth</button>
+        </form>
+
+        <section class="networth-result" id="networthResult" aria-live="polite">
+            <h2>Your Financial Summary</h2>
+            <p id="totalAssets"></p>
+            <p id="totalLiabilities"></p>
+            <p id="netWorth"></p>
+            <p id="financialStatus"></p>
+        </section>
+
+        <a href="index.html" class="networth-back">← Back to Home</a>
+    </main>
+
+    <script>
+        const money = new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 2
+        });
+
+        document.getElementById("networthForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const assetFields = ["cash", "investments", "property", "vehicles"];
+            const liabilityFields = ["homeLoan", "personalLoan", "otherDebt"];
+
+            const assets = assetFields.reduce((sum, id) =>
+                sum + Number(document.getElementById(id).value), 0);
+
+            const liabilities = liabilityFields.reduce((sum, id) =>
+                sum + Number(document.getElementById(id).value), 0);
+
+            const netWorth = assets - liabilities;
+
+            document.getElementById("totalAssets").textContent =
+                "Total Assets: " + money.format(assets);
+
+            document.getElementById("totalLiabilities").textContent =
+                "Total Liabilities: " + money.format(liabilities);
+
+            document.getElementById("netWorth").textContent =
+                "Net Worth: " + money.format(netWorth);
+
+            document.getElementById("financialStatus").textContent =
+                netWorth >= 0
+                    ? "Your assets exceed or equal your liabilities."
+                    : "Your liabilities exceed your assets.";
+
+            document.getElementById("networthResult").style.display = "block";
+        });
+    </script>
+</body>
+</html>
