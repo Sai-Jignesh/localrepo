@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inflation Calculator | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .inflation-container {
+            max-width: 650px;
+            margin: 45px auto;
+            padding: 30px;
+            background: #f5f6fa;
+            border-radius: 14px;
+        }
+        h1 { text-align: center; color: #101827; }
+        label {
+            display: block;
+            margin: 17px 0 7px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            background: #101827;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 22px;
+            background: white;
+            border-radius: 10px;
+            line-height: 1.9;
+        }
+        .result h2 { color: #a17b18; }
+        .note { color: #666; font-size: 13px; }
+        .back {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #a17b18;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="inflation-container">
+        <h1>Inflation Calculator</h1>
+        <p>Understand how inflation affects the purchasing power of your money.</p>
+
+        <form id="inflationForm">
+            <label for="amount">Current Amount (₹)</label>
+            <input type="number" id="amount" min="0.01" step="0.01" required>
+
+            <label for="inflationRate">Annual Inflation Rate (%)</label>
+            <input type="number" id="inflationRate" min="0" max="100" step="0.01" value="6" required>
+
+            <label for="years">Number of Years</label>
+            <input type="number" id="years" min="1" max="100" step="1" required>
+
+            <button type="submit">Calculate Inflation Impact</button>
+        </form>
+
+        <section class="result" id="result" aria-live="polite">
+            <h2>Inflation Summary</h2>
+            <p id="currentValue"></p>
+            <p id="futureValue"></p>
+            <p id="purchasingPower"></p>
+            <p id="additionalAmount"></p>
+        </section>
+
+        <p class="note">This calculator uses a constant annual inflation assumption. Actual inflation may vary.</p>
+        <a href="index.html" class="back">← Back to Home</a>
+    </main>
+
+    <script>
+        const money = new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 2
+        });
+
+        document.getElementById("inflationForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const amount = Number(document.getElementById("amount").value);
+            const rate = Number(document.getElementById("inflationRate").value) / 100;
+            const years = Number(document.getElementById("years").value);
+
+            if (
+                amount <= 0 || rate < 0 || rate > 1 ||
+                years < 1 || years > 100
+            ) {
+                alert("Please enter valid values.");
+                return;
+            }
+
+            const futureCost = amount * Math.pow(1 + rate, years);
+            const futurePurchasingPower = amount / Math.pow(1 + rate, years);
+            const additionalAmount = futureCost - amount;
+
+            document.getElementById("currentValue").textContent =
+                "Current Amount: " + money.format(amount);
+
+            document.getElementById("futureValue").textContent =
+                "Equivalent Future Cost: " + money.format(futureCost);
+
+            document.getElementById("purchasingPower").textContent =
+                "Future Purchasing Power of Current Money: " +
+                money.format(futurePurchasingPower);
+
+            document.getElementById("additionalAmount").textContent =
+                "Additional Amount Required: " + money.format(additionalAmount);
+
+            document.getElementById("result").style.display = "block";
+        });
+    </script>
+</body>
+</html>
