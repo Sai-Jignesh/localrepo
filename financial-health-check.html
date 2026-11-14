@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Health Check | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .health-container {
+            max-width: 680px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+        }
+        .health-container h1, .subtitle { text-align: center; }
+        .subtitle { color: #666; margin-bottom: 25px; }
+        .health-form label {
+            display: block;
+            margin: 15px 0 7px;
+            font-weight: 600;
+        }
+        .health-form input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            box-sizing: border-box;
+        }
+        .health-form button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            border: none;
+            border-radius: 7px;
+            background: #173b70;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .health-result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: #eef4ff;
+            border-radius: 10px;
+        }
+        .health-result p { margin: 12px 0; }
+        .health-result h3 { margin-top: 0; }
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #173b70;
+        }
+        .recommendations {
+            padding-left: 20px;
+            line-height: 1.7;
+        }
+        .disclaimer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <main class="health-container">
+        <h1>Financial Health Check</h1>
+        <p class="subtitle">Evaluate your monthly finances and understand your financial position.</p>
+
+        <form class="health-form" id="healthForm">
+            <label for="income">Monthly Income (₹)</label>
+            <input type="number" id="income" min="1" step="0.01" required>
+
+            <label for="expenses">Monthly Expenses (₹)</label>
+            <input type="number" id="expenses" min="0" step="0.01" required>
+
+            <label for="savings">Monthly Savings (₹)</label>
+            <input type="number" id="savings" min="0" step="0.01" required>
+
+            <label for="debt">Total Outstanding Debt (₹)</label>
+            <input type="number" id="debt" min="0" step="0.01" required>
+
+            <button type="submit">Check Financial Health</button>
+        </form>
+
+        <section class="health-result" id="result" aria-live="polite">
+            <h3>Your Financial Summary</h3>
+            <p id="savingsRate"></p>
+            <p id="expenseRate"></p>
+            <p id="debtRatio"></p>
+            <p id="surplus"></p>
+            <p class="score" id="score"></p>
+            <h3>Recommendations</h3>
+            <ul class="recommendations" id="recommendations"></ul>
+        </section>
+
+        <p class="disclaimer">
+            This is an educational assessment based on the figures entered.
+            It is not a formal credit rating or professional financial assessment.
+        </p>
+    </main>
+
+    <script>
+        document.getElementById("healthForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const income = Number(document.getElementById("income").value);
+            const expenses = Number(document.getElementById("expenses").value);
+            const savings = Number(document.getElementById("savings").value);
+            const debt = Number(document.getElementById("debt").value);
+
+            if (
+                !Number.isFinite(income + expenses + savings + debt) ||
+                income <= 0 || expenses < 0 || savings < 0 || debt < 0
+            ) {
+                alert("Please enter valid financial details.");
+                return;
+            }
+
+            const savingsRate = (savings / income) * 100;
+            const expenseRate = (expenses / income) * 100;
+            const debtRatio = (debt / (income * 12)) * 100;
+            const surplus = income - expenses - savings;
+
+            let score = 0;
+            const tips = [];
+
+            if (savingsRate >= 20) {
+                score += 40;
+                tips.push("Maintain your regular savings habit.");
+            } else {
+                tips.push("Try to gradually increase your monthly savings.");
+            }
+
+            if (expenseRate <= 60) {
+                score += 30;
+                tips.push("Your expenses are within the suggested assessment range.");
+            } else {
+                tips.push("Review discretionary expenses and identify ways to reduce spending.");
+            }
+
+            if (debtRatio <= 30) {
+                score += 30;
+                tips.push("Continue managing your outstanding debt responsibly.");
+            } else {
+                tips.push("Consider prioritizing high-interest debt repayment.");
+            }
+
+            if (surplus < 0) {
+                tips.push("Your expenses and savings exceed your income. Review your monthly budget.");
+            } else if (surplus > 0) {
+                tips.push("Consider assigning your remaining monthly balance to savings or debt repayment.");
+            }
+
+            const currency = value => "₹" + value.toLocaleString("en-IN", {
+                maximumFractionDigits: 2
+            });
+
+            document.getElementById("savingsRate").textContent =
+                "Savings Rate: " + savingsRate.toFixed(2) + "%";
+
+            document.getElementById("expenseRate").textContent =
+                "Expense Rate: " + expenseRate.toFixed(2) + "%";
+
+            document.getElementById("debtRatio").textContent =
+                "Debt-to-Annual-Income Ratio: " + debtRatio.toFixed(2) + "%";
+
+            document.getElementById("surplus").textContent =
+                "Monthly Balance After Expenses and Savings: " + currency(surplus);
+
+            document.getElementById("score").textContent =
+                "Financial Health Score: " + score + "/100";
+
+            const list = document.getElementById("recommendations");
+            list.innerHTML = "";
+
+            tips.forEach(tip => {
+                const item = document.createElement("li");
+                item.textContent = tip;
+                list.appendChild(item);
+            });
+
+            document.getElementById("result").style.display = "block";
+        });
+    </script>
+</body>
+</html>
+
