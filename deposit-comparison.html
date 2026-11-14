@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deposit Comparison | NOVA Bank</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.deposit-container{max-width:680px;margin:40px auto;padding:30px;background:#fff;border-radius:14px;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+h1,.subtitle{text-align:center}.subtitle{color:#666;margin-bottom:25px}
+label{display:block;margin:15px 0 7px;font-weight:600}
+input{width:100%;padding:12px;border:1px solid #ccc;border-radius:7px;box-sizing:border-box}
+button{width:100%;margin-top:22px;padding:13px;background:#173b70;color:white;border:0;border-radius:7px;font-size:16px;cursor:pointer}
+.result{display:none;margin-top:25px;padding:20px;background:#eef4ff;border-radius:10px}
+.result p{margin:12px 0}.highlight{font-size:20px;font-weight:bold;color:#173b70}
+.disclaimer{text-align:center;font-size:12px;color:#777;margin-top:20px}
+</style>
+</head>
+<body>
+<main class="deposit-container">
+<h1>FD vs RD Comparison</h1>
+<p class="subtitle">Compare estimated returns from fixed and recurring deposits.</p>
+<form id="depositForm">
+<label for="principal">FD Initial Deposit (₹)</label>
+<input type="number" id="principal" min="1" step="0.01" required>
+<label for="monthly">RD Monthly Deposit (₹)</label>
+<input type="number" id="monthly" min="1" step="0.01" required>
+<label for="rate">Annual Interest Rate (%)</label>
+<input type="number" id="rate" min="0" max="100" step="0.01" required>
+<label for="years">Deposit Period (Years)</label>
+<input type="number" id="years" min="1" max="20" step="1" required>
+<button type="submit">Compare Deposit Returns</button>
+</form>
+<section class="result" id="result" aria-live="polite">
+<h3>Deposit Comparison</h3>
+<p id="fdPrincipal"></p>
+<p id="fdInterest"></p>
+<p id="fdMaturity"></p>
+<hr>
+<p id="rdPrincipal"></p>
+<p id="rdInterest"></p>
+<p id="rdMaturity"></p>
+<p class="highlight" id="better"></p>
+</section>
+<p class="disclaimer">Illustrative estimates using quarterly FD compounding and monthly RD deposits with monthly compounding. Actual bank rates and calculation methods may differ.</p>
+</main>
+<script>
+document.getElementById("depositForm").addEventListener("submit",function(event){
+event.preventDefault();
+const principal=Number(document.getElementById("principal").value);
+const monthly=Number(document.getElementById("monthly").value);
+const rate=Number(document.getElementById("rate").value);
+const years=Number(document.getElementById("years").value);
+if(!Number.isFinite(principal+monthly+rate+years)||principal<=0||monthly<=0||rate<0||rate>100||years<=0||years>20){
+alert("Please enter valid deposit details.");return;
+}
+const months=years*12;
+const quarterlyRate=rate/400;
+const fd=principal*Math.pow(1+quarterlyRate,4*years);
+const monthlyRate=rate/1200;
+let rd=0;
+for(let i=0;i<months;i++){rd=(rd+monthly)*(1+monthlyRate);}
+const rdInvested=monthly*months;
+const fdInterest=fd-principal;
+const rdInterest=rd-rdInvested;
+const money=value=>"₹"+value.toLocaleString("en-IN",{maximumFractionDigits:2});
+document.getElementById("fdPrincipal").textContent="FD Initial Deposit: "+money(principal);
+document.getElementById("fdInterest").textContent="FD Estimated Interest: "+money(fdInterest);
+document.getElementById("fdMaturity").textContent="FD Maturity Value: "+money(fd);
+document.getElementById("rdPrincipal").textContent="RD Total Deposits: "+money(rdInvested);
+document.getElementById("rdInterest").textContent="RD Estimated Interest: "+money(rdInterest);
+document.getElementById("rdMaturity").textContent="RD Maturity Value: "+money(rd);
+document.getElementById("better").textContent=fd>rd?"FD has the higher estimated maturity value.":rd>fd?"RD has the higher estimated maturity value.":"Both deposits have approximately equal maturity values.";
+document.getElementById("result").style.display="block";
+});
+</script>
+</body>
+</html>
