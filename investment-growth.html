@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Growth Calculator | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .investment-container {
+            max-width: 680px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+        }
+        .investment-container h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .investment-container .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+        }
+        .investment-form label {
+            display: block;
+            margin: 15px 0 7px;
+            font-weight: 600;
+        }
+        .investment-form input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            box-sizing: border-box;
+        }
+        .investment-form button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            border: none;
+            border-radius: 7px;
+            background: #173b70;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .investment-result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: #eef4ff;
+            border-radius: 10px;
+        }
+        .investment-result h3 {
+            margin-top: 0;
+        }
+        .investment-result p {
+            margin: 12px 0;
+        }
+        .investment-result .final-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #173b70;
+        }
+        .investment-disclaimer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="investment-container">
+        <h1>Investment Growth Calculator</h1>
+        <p class="subtitle">Estimate how your investments may grow over time.</p>
+
+        <form class="investment-form" id="investmentForm">
+            <label for="initial">Initial Investment (₹)</label>
+            <input type="number" id="initial" min="0" step="0.01"
+                placeholder="Enter initial investment" required>
+
+            <label for="monthly">Monthly Investment (₹)</label>
+            <input type="number" id="monthly" min="0" step="0.01"
+                placeholder="Enter monthly contribution" required>
+
+            <label for="rate">Expected Annual Return (%)</label>
+            <input type="number" id="rate" min="0" max="100" step="0.01"
+                placeholder="Example: 10" required>
+
+            <label for="years">Investment Duration (Years)</label>
+            <input type="number" id="years" min="1" max="100"
+                placeholder="Enter duration in years" required>
+
+            <button type="submit">Calculate Investment Growth</button>
+        </form>
+
+        <section class="investment-result" id="result" aria-live="polite">
+            <h3>Investment Summary</h3>
+            <p id="invested"></p>
+            <p id="returns"></p>
+            <p class="final-value" id="futureValue"></p>
+        </section>
+
+        <div class="investment-disclaimer">
+            This calculator provides an illustrative estimate, not a guaranteed return.
+            Actual investment performance may vary.
+        </div>
+    </main>
+
+    <script>
+        document.getElementById("investmentForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const initial = Number(document.getElementById("initial").value);
+            const monthly = Number(document.getElementById("monthly").value);
+            const annualRate = Number(document.getElementById("rate").value);
+            const years = Number(document.getElementById("years").value);
+
+            if (
+                initial < 0 ||
+                monthly < 0 ||
+                annualRate < 0 ||
+                annualRate > 100 ||
+                years <= 0 ||
+                !Number.isFinite(initial + monthly + annualRate + years)
+            ) {
+                alert("Please enter valid investment details.");
+                return;
+            }
+
+            const months = years * 12;
+            const monthlyRate = annualRate / 100 / 12;
+
+            let balance = initial;
+
+            for (let i = 0; i < months; i++) {
+                balance *= (1 + monthlyRate);
+                balance += monthly;
+            }
+
+            const totalInvested = initial + monthly * months;
+            const estimatedReturns = balance - totalInvested;
+
+            document.getElementById("invested").textContent =
+                "Total Amount Invested: ₹" + totalInvested.toLocaleString("en-IN", {
+                    maximumFractionDigits: 2
+                });
+
+            document.getElementById("returns").textContent =
+                "Estimated Returns: ₹" + estimatedReturns.toLocaleString("en-IN", {
+                    maximumFractionDigits: 2
+                });
+
+            document.getElementById("futureValue").textContent =
+                "Estimated Future Value: ₹" + balance.toLocaleString("en-IN", {
+                    maximumFractionDigits: 2
+                });
+
+            document.getElementById("result").style.display = "block";
+        });
+    </script>
+
+</body>
+</html>
