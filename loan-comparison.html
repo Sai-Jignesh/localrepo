@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Comparison | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .loan-container {
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+        }
+        h1, .subtitle { text-align: center; }
+        .subtitle { color: #666; margin-bottom: 25px; }
+        .loan-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        .loan-card {
+            padding: 18px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        .loan-card h3 { color: #173b70; }
+        label {
+            display: block;
+            margin: 13px 0 6px;
+            font-weight: 600;
+        }
+        input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            border: none;
+            border-radius: 7px;
+            background: #173b70;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: #eef4ff;
+            border-radius: 10px;
+        }
+        .result p { margin: 12px 0; }
+        .winner {
+            font-size: 19px;
+            font-weight: bold;
+            color: #173b70;
+        }
+        .disclaimer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <main class="loan-container">
+        <h1>Loan Comparison Calculator</h1>
+        <p class="subtitle">Compare two loan offers and estimate their repayment costs.</p>
+
+        <form id="loanForm">
+            <div class="loan-grid">
+                <section class="loan-card">
+                    <h3>Loan Option A</h3>
+                    <label for="amountA">Loan Amount (₹)</label>
+                    <input type="number" id="amountA" min="1" required>
+
+                    <label for="rateA">Annual Interest Rate (%)</label>
+                    <input type="number" id="rateA" min="0" max="100" step="0.01" required>
+
+                    <label for="yearsA">Tenure (Years)</label>
+                    <input type="number" id="yearsA" min="1" max="50" required>
+                </section>
+
+                <section class="loan-card">
+                    <h3>Loan Option B</h3>
+                    <label for="amountB">Loan Amount (₹)</label>
+                    <input type="number" id="amountB" min="1" required>
+
+                    <label for="rateB">Annual Interest Rate (%)</label>
+                    <input type="number" id="rateB" min="0" max="100" step="0.01" required>
+
+                    <label for="yearsB">Tenure (Years)</label>
+                    <input type="number" id="yearsB" min="1" max="50" required>
+                </section>
+            </div>
+
+            <button type="submit">Compare Loans</button>
+        </form>
+
+        <section class="result" id="result" aria-live="polite">
+            <h3>Loan Comparison Results</h3>
+            <p id="emiA"></p>
+            <p id="totalA"></p>
+            <p id="emiB"></p>
+            <p id="totalB"></p>
+            <p class="winner" id="comparison"></p>
+        </section>
+
+        <p class="disclaimer">
+            Estimates use the standard reducing-balance EMI formula.
+            Actual lender charges and terms may differ.
+        </p>
+    </main>
+
+    <script>
+        function calculateLoan(amount, annualRate, years) {
+            const months = years * 12;
+            const rate = annualRate / 1200;
+
+            let emi;
+
+            if (rate === 0) {
+                emi = amount / months;
+            } else {
+                const factor = Math.pow(1 + rate, months);
+                emi = amount * rate * factor / (factor - 1);
+            }
+
+            return {
+                emi,
+                total: emi * months
+            };
+        }
+
+        document.getElementById("loanForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const a = {
+                amount: Number(document.getElementById("amountA").value),
+                rate: Number(document.getElementById("rateA").value),
+                years: Number(document.getElementById("yearsA").value)
+            };
+
+            const b = {
+                amount: Number(document.getElementById("amountB").value),
+                rate: Number(document.getElementById("rateB").value),
+                years: Number(document.getElementById("yearsB").value)
+            };
+
+            const values = [a, b];
+
+            if (values.some(loan =>
+                !Number.isFinite(loan.amount + loan.rate + loan.years) ||
+                loan.amount <= 0 || loan.rate < 0 ||
+                loan.rate > 100 || loan.years <= 0 ||
+                loan.years > 50
+            )) {
+                alert("Please enter valid loan details.");
+                return;
+            }
+
+            const resultA = calculateLoan(a.amount, a.rate, a.years);
+            const resultB = calculateLoan(b.amount, b.rate, b.years);
+
+            const money = value => "₹" + value.toLocaleString("en-IN", {
+                maximumFractionDigits: 2
+            });
+
+            document.getElementById("emiA").textContent =
+                "Option A Monthly EMI: " + money(resultA.emi);
+
+            document.getElementById("totalA").textContent =
+                "Option A Total Repayment: " + money(resultA.total);
+
+            document.getElementById("emiB").textContent =
+                "Option B Monthly EMI: " + money(resultB.emi);
+
+            document.getElementById("totalB").textContent =
+                "Option B Total Repayment: " + money(resultB.total);
+
+            let comparison;
+
+            if (Math.abs(resultA.total - resultB.total) < 0.01) {
+                comparison = "Both options have approximately equal repayment costs.";
+            } else if (resultA.total < resultB.total) {
+                comparison = "Option A has the lower estimated total repayment.";
+            } else {
+                comparison = "Option B has the lower estimated total repayment.";
+            }
+
+            document.getElementById("comparison").textContent = comparison;
+            document.getElementById("result").style.display = "block";
+        });
+    </script>
+</body>
+</html>
+
