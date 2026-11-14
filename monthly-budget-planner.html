@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Budget Planner | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .budget-container {
+            max-width: 680px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0,0,0,.08);
+        }
+        h1, .subtitle { text-align: center; }
+        .subtitle { color: #666; margin-bottom: 25px; }
+        label {
+            display: block;
+            margin: 14px 0 7px;
+            font-weight: 600;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            background: #173b70;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: #eef4ff;
+            border-radius: 10px;
+        }
+        .result p { margin: 12px 0; }
+        .remaining {
+            font-size: 21px;
+            font-weight: bold;
+            color: #173b70;
+        }
+        .disclaimer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <main class="budget-container">
+        <h1>Monthly Budget Planner</h1>
+        <p class="subtitle">Plan your income, expenses and monthly savings.</p>
+
+        <form id="budgetForm">
+            <label for="income">Monthly Income (₹)</label>
+            <input type="number" id="income" min="0.01" step="0.01" required>
+
+            <label for="housing">Housing and Rent (₹)</label>
+            <input type="number" id="housing" min="0" step="0.01" value="0" required>
+
+            <label for="food">Food and Groceries (₹)</label>
+            <input type="number" id="food" min="0" step="0.01" value="0" required>
+
+            <label for="transport">Transportation (₹)</label>
+            <input type="number" id="transport" min="0" step="0.01" value="0" required>
+
+            <label for="utilities">Utilities and Bills (₹)</label>
+            <input type="number" id="utilities" min="0" step="0.01" value="0" required>
+
+            <label for="entertainment">Entertainment (₹)</label>
+            <input type="number" id="entertainment" min="0" step="0.01" value="0" required>
+
+            <label for="other">Other Expenses (₹)</label>
+            <input type="number" id="other" min="0" step="0.01" value="0" required>
+
+            <button type="submit">Calculate Monthly Budget</button>
+        </form>
+
+        <section class="result" id="result" aria-live="polite">
+            <h3>Monthly Budget Summary</h3>
+            <p id="incomeResult"></p>
+            <p id="expensesResult"></p>
+            <p id="savingsRate"></p>
+            <p class="remaining" id="balanceResult"></p>
+            <p id="status"></p>
+        </section>
+
+        <p class="disclaimer">
+            This planner provides an estimate based on the amounts entered.
+        </p>
+    </main>
+
+    <script>
+        document.getElementById("budgetForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const income = Number(document.getElementById("income").value);
+            const ids = ["housing", "food", "transport", "utilities", "entertainment", "other"];
+            const expenses = ids.map(id => Number(document.getElementById(id).value));
+
+            if (!Number.isFinite(income) || income <= 0 ||
+                expenses.some(value => !Number.isFinite(value) || value < 0)) {
+                alert("Please enter valid budget details.");
+                return;
+            }
+
+            const totalExpenses = expenses.reduce((sum, value) => sum + value, 0);
+            const balance = income - totalExpenses;
+            const savingsRate = (balance / income) * 100;
+
+            const money = value => "₹" + value.toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            document.getElementById("incomeResult").textContent =
+                "Monthly Income: " + money(income);
+
+            document.getElementById("expensesResult").textContent =
+                "Total Expenses: " + money(totalExpenses);
+
+            document.getElementById("savingsRate").textContent =
+                "Remaining Income Percentage: " + savingsRate.toFixed(2) + "%";
+
+            document.getElementById("balanceResult").textContent =
+                "Monthly Balance: " + money(balance);
+
+            document.getElementById("status").textContent =
+                balance > 0 ? "You have a positive monthly balance." :
+                balance < 0 ? "Your expenses exceed your monthly income." :
+                "Your income is fully allocated.";
+
+            document.getElementById("result").style.display = "block";
+        });
+    </script>
+</body>
+</html>
