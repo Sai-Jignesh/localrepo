@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>52-Week Savings Challenge | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .savings-container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+        }
+        .savings-container h1, .subtitle {
+            text-align: center;
+        }
+        .subtitle { color: #666; margin-bottom: 25px; }
+        .savings-form label {
+            display: block;
+            margin: 15px 0 7px;
+            font-weight: 600;
+        }
+        .savings-form input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            box-sizing: border-box;
+        }
+        .savings-form button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 13px;
+            border: none;
+            border-radius: 7px;
+            background: #173b70;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .summary {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: #eef4ff;
+            border-radius: 10px;
+        }
+        .summary p { margin: 10px 0; }
+        .summary strong { color: #173b70; }
+        .progress-track {
+            height: 12px;
+            background: #dce3ed;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            background: #287a50;
+            transition: width 0.3s;
+        }
+        .schedule {
+            margin-top: 25px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
+            gap: 8px;
+        }
+        .week {
+            padding: 10px 5px;
+            background: #f1f4f8;
+            border-radius: 7px;
+            text-align: center;
+            font-size: 13px;
+        }
+        .week strong { display: block; margin-bottom: 5px; }
+        .disclaimer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <main class="savings-container">
+        <h1>52-Week Savings Challenge</h1>
+        <p class="subtitle">Build a consistent savings habit, one week at a time.</p>
+
+        <form class="savings-form" id="savingsForm">
+            <label for="amount">Starting Weekly Savings (₹)</label>
+            <input type="number" id="amount" min="1" step="1"
+                placeholder="Example: 100" required>
+
+            <label for="increase">Weekly Increase (₹)</label>
+            <input type="number" id="increase" min="0" step="1"
+                value="100" required>
+
+            <button type="submit">Generate Savings Plan</button>
+        </form>
+
+        <section class="summary" id="summary" aria-live="polite">
+            <h3>Your Savings Plan</h3>
+            <p id="total"></p>
+            <p id="firstWeek"></p>
+            <p id="lastWeek"></p>
+            <p id="average"></p>
+            <p id="progressText">Progress: 0 of 52 weeks</p>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="schedule" id="schedule"></div>
+        </section>
+
+        <p class="disclaimer">
+            This is a savings planning tool. Actual savings depend on completing
+            each weekly contribution.
+        </p>
+    </main>
+
+    <script>
+        document.getElementById("savingsForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const starting = Number(document.getElementById("amount").value);
+            const increase = Number(document.getElementById("increase").value);
+
+            if (!Number.isFinite(starting) || !Number.isFinite(increase) ||
+                starting <= 0 || increase < 0) {
+                alert("Please enter valid savings amounts.");
+                return;
+            }
+
+            const schedule = document.getElementById("schedule");
+            schedule.innerHTML = "";
+
+            let total = 0;
+
+            for (let week = 1; week <= 52; week++) {
+                const contribution = starting + (week - 1) * increase;
+                total += contribution;
+
+                const item = document.createElement("div");
+                item.className = "week";
+
+                const heading = document.createElement("strong");
+                heading.textContent = "Week " + week;
+
+                const value = document.createElement("span");
+                value.textContent = "₹" + contribution.toLocaleString("en-IN");
+
+                item.appendChild(heading);
+                item.appendChild(value);
+                schedule.appendChild(item);
+            }
+
+            const currency = value => "₹" + value.toLocaleString("en-IN", {
+                maximumFractionDigits: 2
+            });
+
+            document.getElementById("total").innerHTML =
+                "<strong>Target Savings:</strong> " + currency(total);
+
+            document.getElementById("firstWeek").innerHTML =
+                "<strong>First Week:</strong> " + currency(starting);
+
+            document.getElementById("lastWeek").innerHTML =
+                "<strong>Final Week:</strong> " + currency(starting + 51 * increase);
+
+            document.getElementById("average").innerHTML =
+                "<strong>Average Weekly Savings:</strong> " + currency(total / 52);
+
+            document.getElementById("progressText").textContent =
+                "Progress: 0 of 52 weeks";
+
+            document.getElementById("progressFill").style.width = "0%";
+            document.getElementById("summary").style.display = "block";
+        });
+    </script>
+</body>
+</html>
