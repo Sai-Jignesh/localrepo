@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Calculator | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .tax-container {
+            max-width: 700px;
+            margin: 45px auto;
+            padding: 30px;
+            background: #f5f6fa;
+            border-radius: 14px;
+        }
+        h1 { text-align: center; color: #101827; }
+        label {
+            display: block;
+            margin: 17px 0 7px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            background: #101827;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .tax-result {
+            display: none;
+            margin-top: 25px;
+            padding: 22px;
+            background: white;
+            border-radius: 10px;
+            line-height: 1.9;
+        }
+        .tax-result h2 { color: #a17b18; }
+        .tax-note {
+            margin-top: 20px;
+            color: #666;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .back {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #a17b18;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="tax-container">
+        <h1>Income Tax Calculator</h1>
+        <p>Estimate income tax using an illustrative Indian tax slab model.</p>
+
+        <form id="taxForm">
+            <label for="income">Annual Taxable Income (₹)</label>
+            <input type="number" id="income" min="0" step="1" required>
+
+            <label for="regime">Select Tax Regime</label>
+            <select id="regime">
+                <option value="new">New Regime (Illustrative FY 2025-26 slabs)</option>
+                <option value="old">Old Regime (Illustrative slabs, below 60 years)</option>
+            </select>
+
+            <button type="submit">Calculate Estimated Tax</button>
+        </form>
+
+        <section class="tax-result" id="taxResult" aria-live="polite">
+            <h2>Tax Summary</h2>
+            <p id="taxableIncome"></p>
+            <p id="basicTax"></p>
+            <p id="cess"></p>
+            <p id="totalTax"></p>
+            <p id="effectiveRate"></p>
+        </section>
+
+        <p class="tax-note">
+            Educational estimate only. This simplified calculator excludes deductions,
+            rebates, surcharge, special-rate income and other adjustments. It is not
+            a substitute for official tax calculations or professional advice.
+        </p>
+
+        <a href="index.html" class="back">← Back to Home</a>
+    </main>
+
+    <script>
+        const money = new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 2
+        });
+
+        function calculateSlabTax(income, slabs) {
+            let tax = 0;
+            let previousLimit = 0;
+
+            for (const slab of slabs) {
+                const taxableInSlab = Math.max(
+                    0,
+                    Math.min(income, slab.limit) - previousLimit
+                );
+
+                tax += taxableInSlab * slab.rate;
+                previousLimit = slab.limit;
+
+                if (income <= slab.limit) break;
+            }
+
+            return tax;
+        }
+
+        document.getElementById("taxForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const income = Number(document.getElementById("income").value);
+            const regime = document.getElementById("regime").value;
+
+            if (!Number.isFinite(income) || income < 0) {
+                alert("Please enter a valid taxable income.");
+                return;
+            }
+
+            let slabs;
+
+            if (regime === "new") {
+                slabs = [
+                    { limit: 400000, rate: 0 },
+                    { limit: 800000, rate: 0.05 },
+                    { limit: 1200000, rate: 0.10 },
+                    { limit: 1600000, rate: 0.15 },
+                    { limit: 2000000, rate: 0.20 },
+                    { limit: 2400000, rate: 0.25 },
+                    { limit: Infinity, rate: 0.30 }
+                ];
+            } else {
+                slabs = [
+                    { limit: 250000, rate: 0 },
+                    { limit: 500000, rate: 0.05 },
+                    { limit: 1000000, rate: 0.20 },
+                    { limit: Infinity, rate: 0.30 }
+                ];
+            }
+
+            const basicTax = calculateSlabTax(income, slabs);
+            const cess = basicTax * 0.04;
+            const totalTax = basicTax + cess;
+            const effectiveRate = income > 0 ? (totalTax / income) * 100 : 0;
+
+            document.getElementById("taxableIncome").textContent =
+                "Annual Taxable Income: " + money.format(income);
+
+            document.getElementById("basicTax").textContent =
+                "Estimated Basic Tax: " + money.format(basicTax);
+
+            document.getElementById("cess").textContent =
+                "4% Health and Education Cess: " + money.format(cess);
+
+            document.getElementById("totalTax").textContent =
+                "Estimated Total Tax: " + money.format(totalTax);
+
+            document.getElementById("effectiveRate").textContent =
+                "Effective Tax Rate: " + effectiveRate.toFixed(2) + "%";
+
+            document.getElementById("taxResult").style.display = "block";
+        });
+    </script>
+</body>
+</html>
