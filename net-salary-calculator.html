@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Net Salary Calculator | NOVA Bank</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.salary-container{max-width:650px;margin:40px auto;padding:30px;background:#fff;border-radius:14px;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+h1,.subtitle{text-align:center}.subtitle{color:#666;margin-bottom:25px}
+label{display:block;margin:15px 0 7px;font-weight:600}
+input{width:100%;padding:12px;border:1px solid #ccc;border-radius:7px;box-sizing:border-box}
+button{width:100%;margin-top:22px;padding:13px;background:#173b70;color:white;border:0;border-radius:7px;font-size:16px;cursor:pointer}
+.result{display:none;margin-top:25px;padding:20px;background:#eef4ff;border-radius:10px}
+.result p{margin:12px 0}.net{font-size:22px;font-weight:bold;color:#173b70}
+.disclaimer{text-align:center;font-size:12px;color:#777;margin-top:20px}
+</style>
+</head>
+<body>
+<main class="salary-container">
+<h1>Net Salary Calculator</h1>
+<p class="subtitle">Estimate your take-home salary after deductions.</p>
+<form id="salaryForm">
+<label for="basic">Monthly Basic Salary (₹)</label>
+<input type="number" id="basic" min="0.01" step="0.01" required>
+<label for="allowance">Monthly Allowances (₹)</label>
+<input type="number" id="allowance" min="0" step="0.01" value="0" required>
+<label for="bonus">Other Monthly Earnings (₹)</label>
+<input type="number" id="bonus" min="0" step="0.01" value="0" required>
+<label for="tax">Estimated Tax Deduction (%)</label>
+<input type="number" id="tax" min="0" max="100" step="0.01" value="0" required>
+<label for="pf">Provident Fund Deduction (₹)</label>
+<input type="number" id="pf" min="0" step="0.01" value="0" required>
+<label for="other">Other Monthly Deductions (₹)</label>
+<input type="number" id="other" min="0" step="0.01" value="0" required>
+<button type="submit">Calculate Net Salary</button>
+</form>
+<section class="result" id="result" aria-live="polite">
+<h3>Salary Breakdown</h3>
+<p id="gross"></p>
+<p id="taxAmount"></p>
+<p id="pfAmount"></p>
+<p id="otherAmount"></p>
+<p class="net" id="net"></p>
+<p id="annual"></p>
+</section>
+<p class="disclaimer">This is an illustrative salary estimate. Actual income tax and payroll deductions depend on applicable tax rules and employer policies.</p>
+</main>
+<script>
+document.getElementById("salaryForm").addEventListener("submit",function(event){
+event.preventDefault();
+const basic=Number(document.getElementById("basic").value);
+const allowance=Number(document.getElementById("allowance").value);
+const bonus=Number(document.getElementById("bonus").value);
+const taxRate=Number(document.getElementById("tax").value);
+const pf=Number(document.getElementById("pf").value);
+const other=Number(document.getElementById("other").value);
+const values=[basic,allowance,bonus,taxRate,pf,other];
+if(values.some(value=>!Number.isFinite(value)||value<0)||basic<=0||taxRate>100){
+alert("Please enter valid salary details.");return;
+}
+const gross=basic+allowance+bonus;
+const taxAmount=gross*taxRate/100;
+const totalDeductions=taxAmount+pf+other;
+const net=gross-totalDeductions;
+const money=value=>"₹"+value.toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+document.getElementById("gross").textContent="Gross Monthly Salary: "+money(gross);
+document.getElementById("taxAmount").textContent="Estimated Tax Deduction: "+money(taxAmount);
+document.getElementById("pfAmount").textContent="Provident Fund Deduction: "+money(pf);
+document.getElementById("otherAmount").textContent="Other Deductions: "+money(other);
+document.getElementById("net").textContent="Net Monthly Salary: "+money(net);
+document.getElementById("annual").textContent="Estimated Annual Take-Home: "+money(net*12);
+document.getElementById("result").style.display="block";
+});
+</script>
+</body>
+</html>
