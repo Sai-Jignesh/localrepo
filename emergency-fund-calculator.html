@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Fund Calculator | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .fund-container {
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0,0,0,.08);
+        }
+        h1, .subtitle { text-align: center; }
+        .subtitle { color: #666; margin-bottom: 25px; }
+        label {
+            display: block;
+            margin: 15px 0 7px;
+            font-weight: 600;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            background: #173b70;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: #eef4ff;
+            border-radius: 10px;
+        }
+        .result p { margin: 12px 0; }
+        .target {
+            font-size: 22px;
+            font-weight: bold;
+            color: #173b70;
+        }
+        .progress-track {
+            height: 13px;
+            background: #dce3ed;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        .progress-fill {
+            width: 0;
+            height: 100%;
+            background: #287a50;
+            transition: width .3s;
+        }
+        .disclaimer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <main class="fund-container">
+        <h1>Emergency Fund Calculator</h1>
+        <p class="subtitle">Calculate how much you should save for unexpected expenses.</p>
+
+        <form id="fundForm">
+            <label for="expenses">Monthly Essential Expenses (₹)</label>
+            <input type="number" id="expenses" min="0.01" step="0.01" required>
+
+            <label for="months">Emergency Fund Coverage (Months)</label>
+            <input type="number" id="months" min="1" max="24" step="1" value="6" required>
+
+            <label for="current">Current Emergency Savings (₹)</label>
+            <input type="number" id="current" min="0" step="0.01" value="0" required>
+
+            <label for="monthly">Monthly Amount You Can Save (₹)</label>
+            <input type="number" id="monthly" min="0" step="0.01" value="0" required>
+
+            <button type="submit">Calculate Emergency Fund</button>
+        </form>
+
+        <section class="result" id="result" aria-live="polite">
+            <h3>Your Emergency Fund Plan</h3>
+            <p class="target" id="target"></p>
+            <p id="current"></p>
+            <p id="remaining"></p>
+            <p id="progressText"></p>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="timeline"></p>
+            <p id="status"></p>
+        </section>
+
+        <p class="disclaimer">
+            This is an illustrative savings target, not financial advice.
+        </p>
+    </main>
+
+    <script>
+        document.getElementById("fundForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const expenses = Number(document.getElementById("expenses").value);
+            const months = Number(document.getElementById("months").value);
+            const current = Number(document.getElementById("current").value);
+            const monthly = Number(document.getElementById("monthly").value);
+
+            if (
+                !Number.isFinite(expenses + months + current + monthly) ||
+                expenses <= 0 ||
+                !Number.isInteger(months) ||
+                months < 1 || months > 24 ||
+                current < 0 || monthly < 0
+            ) {
+                alert("Please enter valid emergency fund details.");
+                return;
+            }
+
+            const target = expenses * months;
+            const remaining = Math.max(0, target - current);
+            const progress = Math.min(100, (current / target) * 100);
+
+            const money = value => "₹" + value.toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            document.getElementById("target").textContent =
+                "Recommended Fund: " + money(target);
+
+            document.getElementById("current").textContent =
+                "Current Savings: " + money(current);
+
+            document.getElementById("remaining").textContent =
+                "Additional Savings Needed: " + money(remaining);
+
+            document.getElementById("progressText").textContent =
+                "Fund Progress: " + progress.toFixed(1) + "%";
+
+            document.getElementById("progressFill").style.width = progress + "%";
+
+            let timeline;
+
+            if (remaining === 0) {
+                timeline = "You have reached your emergency fund target.";
+            } else if (monthly > 0) {
+                const requiredMonths = Math.ceil(remaining / monthly);
+                timeline = "Estimated Time to Reach Target: " +
+                    requiredMonths + " months";
+            } else {
+                timeline = "Enter a monthly savings amount to estimate your timeline.";
+            }
+
+            document.getElementById("timeline").textContent = timeline;
+
+            document.getElementById("status").textContent =
+                remaining === 0 ? "Your emergency fund target is complete." :
+                "Continue saving regularly to reach your target.";
+
+            document.getElementById("result").style.display = "block";
+        });
+    </script>
+</body>
+</html>
