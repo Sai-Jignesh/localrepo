@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Splitter | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .splitter-container {
+            max-width: 650px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+        }
+        .splitter-container h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+        }
+        .splitter-form label {
+            display: block;
+            margin: 15px 0 7px;
+            font-weight: 600;
+        }
+        .splitter-form input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            box-sizing: border-box;
+        }
+        .splitter-form button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            border: none;
+            border-radius: 7px;
+            background: #173b70;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .splitter-result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: #eef4ff;
+            border-radius: 10px;
+        }
+        .splitter-result p {
+            margin: 12px 0;
+        }
+        .splitter-result .per-person {
+            font-size: 22px;
+            font-weight: bold;
+            color: #173b70;
+        }
+        .disclaimer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="splitter-container">
+        <h1>Bill Splitter</h1>
+        <p class="subtitle">Split bills easily among friends and family.</p>
+
+        <form class="splitter-form" id="splitterForm">
+            <label for="bill">Total Bill Amount (₹)</label>
+            <input type="number" id="bill" min="0.01" step="0.01"
+                placeholder="Enter total bill amount" required>
+
+            <label for="people">Number of People</label>
+            <input type="number" id="people" min="1" max="100"
+                placeholder="Enter number of people" required>
+
+            <label for="tax">Tax Percentage (%)</label>
+            <input type="number" id="tax" min="0" max="100"
+                step="0.01" value="0" required>
+
+            <label for="tip">Tip Percentage (%)</label>
+            <input type="number" id="tip" min="0" max="100"
+                step="0.01" value="0" required>
+
+            <button type="submit">Split Bill</button>
+        </form>
+
+        <section class="splitter-result" id="result" aria-live="polite">
+            <h3>Bill Summary</h3>
+            <p id="baseAmount"></p>
+            <p id="taxAmount"></p>
+            <p id="tipAmount"></p>
+            <p id="totalAmount"></p>
+            <p class="per-person" id="perPerson"></p>
+        </section>
+
+        <div class="disclaimer">
+            This calculator provides an estimated equal split of the bill.
+        </div>
+    </main>
+
+    <script>
+        document.getElementById("splitterForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const bill = Number(document.getElementById("bill").value);
+            const people = Number(document.getElementById("people").value);
+            const taxRate = Number(document.getElementById("tax").value);
+            const tipRate = Number(document.getElementById("tip").value);
+
+            if (
+                !Number.isFinite(bill + people + taxRate + tipRate) ||
+                bill <= 0 ||
+                !Number.isInteger(people) ||
+                people < 1 ||
+                people > 100 ||
+                taxRate < 0 ||
+                taxRate > 100 ||
+                tipRate < 0 ||
+                tipRate > 100
+            ) {
+                alert("Please enter valid bill details.");
+                return;
+            }
+
+            const taxAmount = bill * taxRate / 100;
+            const tipAmount = bill * tipRate / 100;
+            const total = bill + taxAmount + tipAmount;
+            const perPerson = total / people;
+
+            const formatCurrency = amount =>
+                "₹" + amount.toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+
+            document.getElementById("baseAmount").textContent =
+                "Base Bill: " + formatCurrency(bill);
+
+            document.getElementById("taxAmount").textContent =
+                "Tax Amount: " + formatCurrency(taxAmount);
+
+            document.getElementById("tipAmount").textContent =
+                "Tip Amount: " + formatCurrency(tipAmount);
+
+            document.getElementById("totalAmount").textContent =
+                "Total Bill: " + formatCurrency(total);
+
+            document.getElementById("perPerson").textContent =
+                "Each Person Pays: " + formatCurrency(perPerson);
+
+            document.getElementById("result").style.display = "block";
+        });
+    </script>
+
+</body>
+</html>
+
