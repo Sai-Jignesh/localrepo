@@ -846,3 +846,35 @@ button:disabled:hover,
 input[type="submit"]:disabled:hover {
     transform: none;
 }
+/* NOVA Bank - Loading and Disabled States */
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+button:disabled {
+    box-shadow: none;
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+    background-color: #f1f3f6;
+    color: #777;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid rgba(23, 59, 112, 0.35);
+    outline-offset: 3px;
+}
+
+[aria-busy="true"] {
+    cursor: progress;
+}
