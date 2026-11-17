@@ -731,3 +731,28 @@ nav li {
     color: #173b70;
     border-color: #c8d8f0;
 }
+/* NOVA Bank - Custom Scrollbar Styling */
+
+html {
+    scrollbar-width: thin;
+    scrollbar-color: #173b70 #edf1f6;
+}
+
+::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+::-webkit-scrollbar-track {
+    background: #edf1f6;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #173b70;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #24528f;
+}
