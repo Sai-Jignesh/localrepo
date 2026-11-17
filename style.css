@@ -878,3 +878,56 @@ textarea:focus-visible {
 [aria-busy="true"] {
     cursor: progress;
 }
+/* NOVA Bank - Print-Friendly Styling */
+
+@media print {
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-size: 12pt;
+    }
+
+    nav,
+    footer,
+    button,
+    .no-print {
+        display: none !important;
+    }
+
+    main,
+    .container,
+    .card {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 12px !important;
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+    th,
+    td {
+        color: #000000 !important;
+        background: #ffffff !important;
+        border: 1px solid #999 !important;
+    }
+
+    a {
+        color: #000000 !important;
+        text-decoration: none !important;
+    }
+
+    h1, h2, h3 {
+        color: #000000 !important;
+        break-after: avoid;
+    }
+
+    tr, img {
+        break-inside: avoid;
+    }
+}
