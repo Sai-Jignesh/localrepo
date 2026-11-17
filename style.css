@@ -534,3 +534,49 @@ a:hover {
         transition-duration: 0.01ms !important;
     }
 }
+/* NOVA Bank - Card Design Improvements */
+
+.card,
+.feature-card,
+.dashboard-card,
+.account-card,
+.stat-card {
+    border: 1px solid rgba(23, 59, 112, 0.10);
+    border-radius: 12px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover,
+.feature-card:hover,
+.dashboard-card:hover,
+.account-card:hover,
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 22px rgba(23, 59, 112, 0.10);
+}
+
+.card h3,
+.feature-card h3,
+.dashboard-card h3,
+.account-card h3,
+.stat-card h3 {
+    color: #173b70;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .feature-card,
+    .dashboard-card,
+    .account-card,
+    .stat-card {
+        transition: none;
+    }
+
+    .card:hover,
+    .feature-card:hover,
+    .dashboard-card:hover,
+    .account-card:hover,
+    .stat-card:hover {
+        transform: none;
+    }
+}
