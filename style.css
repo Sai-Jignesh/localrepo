@@ -652,3 +652,45 @@ nav li {
         padding: 8px 10px;
     }
 }
+/* NOVA Bank - Dashboard Statistics Improvements */
+
+.stat-card {
+    position: relative;
+    overflow: hidden;
+    padding: 20px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #e5eaf1;
+}
+
+.stat-card p {
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.stat-card h2 {
+    color: #173b70;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-top: 5px;
+}
+
+.stat-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: #173b70;
+}
+
+@media (max-width: 600px) {
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-card h2 {
+        font-size: 1.5rem;
+    }
+}
