@@ -694,3 +694,40 @@ nav li {
         font-size: 1.5rem;
     }
 }
+/* NOVA Bank - Alert and Status Message Styling */
+
+.alert,
+.error-message,
+.success-message,
+.warning-message,
+.info-message {
+    padding: 13px 16px;
+    margin: 12px 0;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    line-height: 1.5;
+}
+
+.success-message {
+    background: #eaf7ef;
+    color: #216b3b;
+    border-color: #b8e2c5;
+}
+
+.error-message {
+    background: #fff0f0;
+    color: #a52a2a;
+    border-color: #f0c1c1;
+}
+
+.warning-message {
+    background: #fff8e6;
+    color: #805b10;
+    border-color: #f1dfaa;
+}
+
+.info-message {
+    background: #eef4ff;
+    color: #173b70;
+    border-color: #c8d8f0;
+}
