@@ -580,3 +580,44 @@ a:hover {
         transform: none;
     }
 }
+/* NOVA Bank - Table Styling Improvements */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th {
+    background: #173b70;
+    color: #ffffff;
+    padding: 13px 15px;
+    text-align: left;
+    font-weight: 600;
+}
+
+td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+tbody tr:nth-child(even) {
+    background: #f5f7fb;
+}
+
+tbody tr:hover {
+    background: #eaf0fa;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+@media (max-width: 600px) {
+    th,
+    td {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
