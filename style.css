@@ -817,3 +817,32 @@ select:disabled {
     color: #888888;
     cursor: not-allowed;
 }
+/* NOVA Bank - Link and Button Consistency */
+
+a {
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+a:hover {
+    color: #24528f;
+}
+
+button,
+input[type="submit"],
+input[type="button"] {
+    font-family: inherit;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+
+button:disabled,
+input[type="submit"]:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
+button:disabled:hover,
+input[type="submit"]:disabled:hover {
+    transform: none;
+}
