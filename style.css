@@ -412,3 +412,22 @@ button:focus-visible {
     outline: 2px solid #173b70;
     outline-offset: 3px;
 }
+/* NOVA Bank - Form Input Focus Effects */
+input,
+select,
+textarea {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #173b70;
+    box-shadow: 0 0 0 3px rgba(23, 59, 112, 0.12);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #999;
+}
