@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Card Payoff Calculator | NOVA Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .payoff-container {
+            max-width: 650px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+        }
+        .payoff-container h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .payoff-container p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+        }
+        .payoff-form label {
+            display: block;
+            margin: 15px 0 7px;
+            font-weight: 600;
+        }
+        .payoff-form input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            box-sizing: border-box;
+        }
+        .payoff-form button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            border: none;
+            border-radius: 7px;
+            background: #173b70;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .payoff-result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: #eef4ff;
+            border-radius: 10px;
+        }
+        .payoff-result h3 {
+            margin-top: 0;
+        }
+        .payoff-result p {
+            text-align: left;
+            margin: 10px 0;
+        }
+        .disclaimer {
+            font-size: 12px;
+            color: #777;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="payoff-container">
+        <h1>Credit Card Payoff Calculator</h1>
+        <p>Estimate how long it may take to repay your credit card balance.</p>
+
+        <form class="payoff-form" id="payoffForm">
+            <label for="balance">Outstanding Balance (₹)</label>
+            <input type="number" id="balance" min="1" step="0.01" placeholder="Enter outstanding balance" required>
+
+            <label for="interest">Annual Interest Rate (%)</label>
+            <input type="number" id="interest" min="0" step="0.01" placeholder="Example: 18" required>
+
+            <label for="payment">Monthly Payment (₹)</label>
+            <input type="number" id="payment" min="1" step="0.01" placeholder="Enter monthly payment" required>
+
+            <button type="submit">Calculate Payoff</button>
+        </form>
+
+        <section class="payoff-result" id="result" aria-live="polite">
+            <h3>Payoff Estimate</h3>
+            <p id="duration"></p>
+            <p id="totalPaid"></p>
+            <p id="totalInterest"></p>
+        </section>
+
+        <div class="disclaimer">
+            This is an illustrative estimate using monthly interest calculations.
+            Actual credit card charges may differ due to fees, taxes and daily interest calculations.
+        </div>
+    </main>
+
+    <script>
+        document.getElementById("payoffForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let balance = Number(document.getElementById("balance").value);
+            let annualRate = Number(document.getElementById("interest").value);
+            let payment = Number(document.getElementById("payment").value);
+
+            if (balance <= 0 || annualRate < 0 || payment <= 0) {
+                alert("Please enter valid positive values.");
+                return;
+            }
+
+            let monthlyRate = annualRate / 100 / 12;
+            let remaining = balance;
+            let months = 0;
+            let totalPaid = 0;
+            let totalInterest = 0;
+
+            while (remaining > 0 && months < 1200) {
+                let interest = remaining * monthlyRate;
+                let amountDue = remaining + interest;
+
+                if (payment <= interest) {
+                    alert("Your monthly payment must be greater than the monthly interest.");
+                    return;
+                }
+
+                let actualPayment = Math.min(payment, amountDue);
+                totalInterest += interest;
+                totalPaid += actualPayment;
+                remaining = amountDue - actualPayment;
+                months++;
+            }
+
+            if (months >= 1200 && remaining > 0) {
+                alert("The payoff period is too long to estimate.");
+                return;
+            }
+
+            let years = Math.floor(months / 12);
+            let remainingMonths = months % 12;
+
+            document.getElementById("duration").textContent =
+                "Estimated Payoff Time: " + years + " years and " + remainingMonths + " months";
+
+            document.getElementById("totalPaid").textContent =
+                "Total Amount Paid: ₹" + totalPaid.toFixed(2);
+
+            document.getElementById("totalInterest").textContent =
+                "Estimated Interest: ₹" + totalInterest.toFixed(2);
+
+            document.getElementById("result").style.display = "block";
+        });
+    </script>
+
+</body>
+</html>
+
